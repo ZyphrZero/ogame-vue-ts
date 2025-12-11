@@ -130,7 +130,6 @@ ogame-vue-ts/
 │   └── style.css       # 全局样式
 ├── .github/
 │   └── ISSUE_TEMPLATE/ # GitHub issue 模板
-├── CLAUDE.md           # AI 助手说明文档
 ├── LICENSE             # CC BY-NC 4.0 许可证
 ├── package.json        # 项目依赖
 ├── tsconfig.json       # TypeScript 配置

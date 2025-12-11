@@ -129,7 +129,6 @@ ogame-vue-ts/
 │   └── style.css       # Global styles
 ├── .github/
 │   └── ISSUE_TEMPLATE/ # GitHub issue templates
-├── CLAUDE.md           # AI assistant instructions
 ├── LICENSE             # CC BY-NC 4.0 License
 ├── package.json        # Project dependencies
 ├── tsconfig.json       # TypeScript configuration
