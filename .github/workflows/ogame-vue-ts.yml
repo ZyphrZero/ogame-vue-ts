@@ -37,10 +37,10 @@ jobs:
 
       # 登录 Docker Hub（只在用户名存在时执行）
       - name: 登录 Docker Hub
-        if: secrets.DOCKERHUB_USERNAME != ''  # 只检查 vars，忽略 secrets
+        if: vars.DOCKERHUB_USERNAME != ''  # 只检查 vars，忽略 secrets
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       # 真正一键构建 + 推送多架构镜像（amd64 + arm64）
