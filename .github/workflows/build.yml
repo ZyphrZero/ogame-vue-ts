@@ -15,10 +15,10 @@ jobs:
         include:
           - goos: windows
             goarch: amd64
-            executable: ogame-server-win-amd64.exe
+            executable: ogame-server-win.exe
           - goos: linux
             goarch: amd64
-            executable: ogame-server-linux-amd64
+            executable: ogame-server-linux
           - goos: linux
             goarch: arm64
             executable: ogame-server-linux-arm64
@@ -27,26 +27,22 @@ jobs:
       - uses: pnpm/action-setup@v3
         with:
           version: 8
-      - name: Setup Node.js
+      - name: Setup Node & Go
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'pnpm'
-      - name: Setup Go
-        uses: actions/setup-go@v5
+      - uses: actions/setup-go@v5
         with:
           go-version: '1.21'
-      - name: Install & Build Frontend
+      - name: Build Frontend & Server
         run: |
           pnpm install
           pnpm run build
-      - name: Compile Go Server
-        shell: bash
-        run: |
           [ -f go.mod ] || go mod init ogame-app
           go mod tidy
           GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -ldflags="-s -w" -o ${{ matrix.executable }} main.go
-      - name: Upload Server Artifact
+      - name: Upload
         uses: actions/upload-artifact@v4
         with:
           name: server-${{ matrix.goos }}-${{ matrix.goarch }}
@@ -71,23 +67,28 @@ jobs:
       - uses: pnpm/action-setup@v3
         with:
           version: 8
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'pnpm'
-      - name: Install & Build Electron
+      - name: Build Electron
         run: |
           pnpm install
           pnpm run build
           pnpm run build:electron --${{ matrix.platform }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload Electron Artifact
+      - name: Upload
         uses: actions/upload-artifact@v4
         with:
           name: electron-${{ matrix.platform }}
-          path: pkg/
+          # 仅上传 pkg 下的安装包，忽略 unpacked 目录
+          path: |
+            pkg/*.exe
+            pkg/*.dmg
+            pkg/*.AppImage
+            pkg/*.zip
 
   # 3. 发布 Release
   release:
@@ -96,29 +97,30 @@ jobs:
     permissions:
       contents: write
     steps:
-      # 必须先检出代码，否则 release 步骤里没有 package.json 可供读取版本号
       - uses: actions/checkout@v4
 
-      - name: Download all artifacts
+      - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
-          path: ./release-assets
+          path: ./assets-to-release
+          merge-multiple: true # 将所有文件平铺在一个目录下
 
-      - name: Get Version
+      - name: Get Version for Tagging
         id: get_version
-        shell: bash
-        run: |
-          # 确保在项目根目录下执行
-          VERSION=$(node -e "console.log(require('./package.json').version)")
-          echo "VERSION=v$VERSION" >> $GITHUB_OUTPUT
+        run: echo "VERSION=v$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.get_version.outputs.VERSION }}
           name: Release ${{ steps.get_version.outputs.VERSION }}
-          # 收集所有下载回来的产物
-          files: ./release-assets/**/*
+          # 核心修复：显式指定要上传的文件后缀，彻底排除 package.json
+          files: |
+            ./assets-to-release/*.exe
+            ./assets-to-release/*.dmg
+            ./assets-to-release/*.AppImage
+            ./assets-to-release/*.zip
+            ./assets-to-release/ogame-server-*
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
