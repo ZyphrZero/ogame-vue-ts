@@ -1,4 +1,4 @@
-name: 构建多平台可执行程序
+name: 构建多平台程序 (Go Server & Electron Client)
 
 on:
   push:
@@ -6,16 +6,16 @@ on:
       - main
 
 jobs:
-  # 任务 1: 专门构建 Go 服务端程序
+  # 1. 构建 Go 服务端 (交叉编译)
   build-server:
-    name: Build Go Server for ${{ matrix.goos }}-${{ matrix.goarch }}
+    name: Build Server (${{ matrix.goos }}-${{ matrix.goarch }})
     runs-on: ubuntu-latest
     strategy:
       matrix:
         include:
           - goos: windows
             goarch: amd64
-            executable: ogame-server-windows-amd64.exe
+            executable: ogame-server-win-amd64.exe
           - goos: linux
             goarch: amd64
             executable: ogame-server-linux-amd64
@@ -24,29 +24,31 @@ jobs:
             executable: ogame-server-linux-arm64
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
       - name: Setup Go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v5
         with:
-          go-version: '1.25'
+          go-version: '1.21'
 
       - name: Compile Server
+        shell: bash
         run: |
-          if [ ! -f go.mod ]; then go mod init ogame-app; fi
+          [ -f go.mod ] || go mod init ogame-app
           go mod tidy
           GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -ldflags="-s -w" -o ${{ matrix.executable }} main.go
 
       - name: Upload Server Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.executable }}
+          name: server-${{ matrix.goos }}-${{ matrix.goarch }}
           path: ${{ matrix.executable }}
 
-  # 任务 2: 专门构建 Electron 客户端
+  # 2. 构建 Electron 客户端 (Node.js 环境)
   build-electron:
-    name: Build Electron for ${{ matrix.os }}
+    name: Build Electron (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: windows-latest
@@ -57,21 +59,23 @@ jobs:
             platform: linux
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: 20
+          cache: 'npm' # 如果用 yarn 或 pnpm 请修改此处
 
       - name: Install Dependencies
-        run: bun install
+        run: npm install
 
       - name: Build Vue Frontend
-        run: bun run build
+        run: npm run build
 
       - name: Build Electron App
-        run: bun run build:electron --${{ matrix.platform }}
+        # 确保 package.json 里的脚本能接收参数，或直接运行打包命令
+        run: npm run build:electron -- --${{ matrix.platform }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -79,14 +83,15 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: electron-${{ matrix.platform }}
-          # 仅上传 pkg 目录下的安装包产物
+          # 指向你要求的 pkg 目录
           path: |
             pkg/*.exe
             pkg/*.dmg
             pkg/*.AppImage
             pkg/*.zip
+            pkg/*.deb
 
-  # 任务 3: 汇总发布
+  # 3. 发布 Release
   release:
     needs: [build-server, build-electron]
     runs-on: ubuntu-latest
@@ -98,19 +103,18 @@ jobs:
         with:
           path: ./release-assets
 
-      - name: Get version
+      - name: Get Version from package.json
         id: get_version
-        run: |
-          # 假设版本号仍在 package.json 中
-          echo "VERSION=v$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
         shell: bash
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "VERSION=v$VERSION" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.get_version.outputs.VERSION }}
           name: Release ${{ steps.get_version.outputs.VERSION }}
-          # 收集所有子目录下的文件
           files: ./release-assets/**/*
           generate_release_notes: true
         env:
