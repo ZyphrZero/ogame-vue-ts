@@ -695,7 +695,7 @@
       const spyReport = fleetLogic.processSpyArrival(mission, targetPlanet, gameStore.player, null, npcStore.npcs)
       if (spyReport) gameStore.player.spyReports.push(spyReport)
     } else if (mission.missionType === MissionType.Deploy) {
-      const deployed = fleetLogic.processDeployArrival(mission, targetPlanet, gameStore.player.id)
+      const deployed = fleetLogic.processDeployArrival(mission, targetPlanet, gameStore.player.id, gameStore.player.technologies)
       // 生成部署任务报告
       if (!gameStore.player.missionReports) {
         gameStore.player.missionReports = []
@@ -710,14 +710,14 @@
         targetPlanetId: targetPlanet?.id,
         targetPlanetName:
           targetPlanet?.name || `[${mission.targetPosition.galaxy}:${mission.targetPosition.system}:${mission.targetPosition.position}]`,
-        success: deployed,
-        message: deployed ? t('missionReports.deploySuccess') : t('missionReports.deployFailed'),
+        success: deployed.success,
+        message: deployed.success ? t('missionReports.deploySuccess') : t('missionReports.deployFailed'),
         details: {
           deployedFleet: mission.fleet
         },
         read: false
       })
-      if (deployed) {
+      if (deployed.success && !deployed.overflow) {
         const missionIndex = gameStore.player.fleetMissions.indexOf(mission)
         if (missionIndex > -1) gameStore.player.fleetMissions.splice(missionIndex, 1)
         return
