@@ -460,7 +460,8 @@ export const TECHNOLOGIES: Record<TechnologyType, TechnologyConfig> = {
   [TechnologyType.EspionageTechnology]: {
     id: TechnologyType.EspionageTechnology,
     name: '间谍技术',
-    description: '提高间谍探测效果，每级提高1级侦查深度。侦察等级=己方等级-对方等级+侦察船数/5。≥-1显示舰队，≥1显示防御，≥3显示建筑，≥5显示科技',
+    description:
+      '提高间谍探测效果，每级提高1级侦查深度。侦察等级=己方等级-对方等级+侦察船数/5。≥-1显示舰队，≥1显示防御，≥3显示建筑，≥5显示科技',
     baseCost: { metal: 200, crystal: 1000, deuterium: 200, darkMatter: 0, energy: 0 },
     baseTime: 60,
     costMultiplier: 2,
@@ -620,7 +621,7 @@ export const TECHNOLOGIES: Record<TechnologyType, TechnologyConfig> = {
     baseCost: { metal: 4000000, crystal: 8000000, deuterium: 4000000, darkMatter: 200000, energy: 0 },
     baseTime: 300,
     costMultiplier: 2,
-    maxLevel: 5, // 最多5级
+    maxLevel: 10,
     requirements: {
       [BuildingType.ResearchLab]: 12,
       [TechnologyType.HyperspaceTechnology]: 8,
@@ -844,7 +845,7 @@ export const SHIPS: Record<ShipType, ShipConfig> = {
     attack: 1,
     shield: 1,
     armor: 200,
-    speed: 0,
+    speed: 1, // 极低速度，可被舰队携带但非常慢
     fuelConsumption: 0,
     storageUsage: 1,
     requirements: { [BuildingType.Shipyard]: 1 }

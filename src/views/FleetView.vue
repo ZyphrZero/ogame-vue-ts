@@ -8,11 +8,9 @@
     <!-- 标签切换 -->
     <Tabs v-model="activeTab" class="w-full">
       <TabsList class="grid w-full grid-cols-3">
-        <TabsTrigger value="fleet">{{ t('fleetView.fleetOverview') }}</TabsTrigger>
-        <TabsTrigger value="send">{{ t('fleetView.sendFleet') }}</TabsTrigger>
-        <TabsTrigger value="missions">
-          {{ t('fleetView.flightMissions') }}
-          <Badge v-if="gameStore.player.fleetMissions.length > 0" variant="destructive" class="ml-1">
+        <TabsTrigger v-for="tab in fleetTabs" :key="tab.value" :value="tab.value">
+          {{ t(`fleetView.${tab.labelKey}`) }}
+          <Badge v-if="tab.value === 'missions' && gameStore.player.fleetMissions.length > 0" variant="destructive" class="ml-1">
             {{ gameStore.player.fleetMissions.length }}
           </Badge>
         </TabsTrigger>
@@ -97,17 +95,9 @@
           </CardHeader>
           <CardContent>
             <div class="grid grid-cols-3 gap-2 sm:gap-4">
-              <div class="space-y-2">
-                <Label for="galaxy" class="text-xs sm:text-sm">{{ t('fleetView.galaxy') }}</Label>
-                <Input id="galaxy" v-model.number="targetPosition.galaxy" type="number" min="1" max="9" placeholder="1" />
-              </div>
-              <div class="space-y-2">
-                <Label for="system" class="text-xs sm:text-sm">{{ t('fleetView.system') }}</Label>
-                <Input id="system" v-model.number="targetPosition.system" type="number" min="1" max="10" placeholder="1" />
-              </div>
-              <div class="space-y-2">
-                <Label for="position" class="text-xs sm:text-sm">{{ t('fleetView.position') }}</Label>
-                <Input id="position" v-model.number="targetPosition.position" type="number" min="1" max="10" placeholder="1" />
+              <div v-for="coord in coordinateFields" :key="coord.key" class="space-y-2">
+                <Label :for="coord.key" class="text-xs sm:text-sm">{{ t(`fleetView.${coord.key}`) }}</Label>
+                <Input :id="coord.key" v-model.number="targetPosition[coord.key]" type="number" :min="1" :max="coord.max" placeholder="1" />
               </div>
             </div>
           </CardContent>
@@ -157,52 +147,17 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-              <div class="space-y-2">
-                <Label for="cargo-metal" class="text-xs sm:text-sm flex items-center gap-2">
-                  <ResourceIcon type="metal" size="sm" />
-                  {{ t('resources.metal') }} ({{ t('fleetView.available') }}: {{ formatNumber(planet.resources.metal) }})
-                </Label>
-                <Input id="cargo-metal" v-model.number="cargo.metal" type="number" min="0" :max="planet.resources.metal" placeholder="0" />
-              </div>
-              <div class="space-y-2">
-                <Label for="cargo-crystal" class="text-xs sm:text-sm flex items-center gap-2">
-                  <ResourceIcon type="crystal" size="sm" />
-                  {{ t('resources.crystal') }} ({{ t('fleetView.available') }}: {{ formatNumber(planet.resources.crystal) }})
+              <div v-for="res in cargoResourceFields" :key="res.key" class="space-y-2">
+                <Label :for="`cargo-${res.key}`" class="text-xs sm:text-sm flex items-center gap-2">
+                  <ResourceIcon :type="res.key" size="sm" />
+                  {{ t(`resources.${res.key}`) }} ({{ t('fleetView.available') }}: {{ formatNumber(planet.resources[res.key]) }})
                 </Label>
                 <Input
-                  id="cargo-crystal"
-                  v-model.number="cargo.crystal"
+                  :id="`cargo-${res.key}`"
+                  v-model.number="cargo[res.key]"
                   type="number"
                   min="0"
-                  :max="planet.resources.crystal"
-                  placeholder="0"
-                />
-              </div>
-              <div class="space-y-2">
-                <Label for="cargo-deuterium" class="text-xs sm:text-sm flex items-center gap-2">
-                  <ResourceIcon type="deuterium" size="sm" />
-                  {{ t('resources.deuterium') }} ({{ t('fleetView.available') }}: {{ formatNumber(planet.resources.deuterium) }})
-                </Label>
-                <Input
-                  id="cargo-deuterium"
-                  v-model.number="cargo.deuterium"
-                  type="number"
-                  min="0"
-                  :max="planet.resources.deuterium"
-                  placeholder="0"
-                />
-              </div>
-              <div class="space-y-2">
-                <Label for="cargo-darkMatter" class="text-xs sm:text-sm flex items-center gap-2">
-                  <ResourceIcon type="darkMatter" size="sm" />
-                  {{ t('resources.darkMatter') }} ({{ t('fleetView.available') }}: {{ formatNumber(planet.resources.darkMatter) }})
-                </Label>
-                <Input
-                  id="cargo-darkMatter"
-                  v-model.number="cargo.darkMatter"
-                  type="number"
-                  min="0"
-                  :max="planet.resources.darkMatter"
+                  :max="planet.resources[res.key]"
                   placeholder="0"
                 />
               </div>
@@ -243,9 +198,12 @@
 
       <!-- 飞行任务 -->
       <TabsContent value="missions" class="mt-4 space-y-4">
-        <Card v-if="gameStore.player.fleetMissions.length === 0">
-          <CardContent class="py-8 text-center text-muted-foreground">{{ t('fleetView.noFlightMissions') }}</CardContent>
-        </Card>
+        <Empty v-if="gameStore.player.fleetMissions.length === 0" class="border rounded-lg">
+          <EmptyContent>
+            <RocketIcon class="h-10 w-10 text-muted-foreground" />
+            <EmptyDescription>{{ t('fleetView.noFlightMissions') }}</EmptyDescription>
+          </EmptyContent>
+        </Empty>
 
         <Card v-for="mission in gameStore.player.fleetMissions" :key="mission.id">
           <CardHeader>
@@ -275,25 +233,15 @@
             </div>
 
             <!-- 携带资源 -->
-            <div v-if="mission.cargo.metal > 0 || mission.cargo.crystal > 0 || mission.cargo.deuterium > 0 || mission.cargo.darkMatter > 0">
+            <div v-if="hasCargoResources(mission.cargo)">
               <p class="text-xs sm:text-sm font-medium mb-2">{{ t('fleetView.carryingResources') }}:</p>
               <div class="flex flex-wrap gap-2 text-xs">
-                <span v-if="mission.cargo.metal > 0" class="flex items-center gap-1">
-                  <ResourceIcon type="metal" size="sm" />
-                  {{ formatNumber(mission.cargo.metal) }}
-                </span>
-                <span v-if="mission.cargo.crystal > 0" class="flex items-center gap-1">
-                  <ResourceIcon type="crystal" size="sm" />
-                  {{ formatNumber(mission.cargo.crystal) }}
-                </span>
-                <span v-if="mission.cargo.deuterium > 0" class="flex items-center gap-1">
-                  <ResourceIcon type="deuterium" size="sm" />
-                  {{ formatNumber(mission.cargo.deuterium) }}
-                </span>
-                <span v-if="mission.cargo.darkMatter > 0" class="flex items-center gap-1">
-                  <ResourceIcon type="darkMatter" size="sm" />
-                  {{ formatNumber(mission.cargo.darkMatter) }}
-                </span>
+                <template v-for="res in cargoResourceFields" :key="res.key">
+                  <span v-if="mission.cargo[res.key] > 0" class="flex items-center gap-1">
+                    <ResourceIcon :type="res.key" size="sm" />
+                    {{ formatNumber(mission.cargo[res.key]) }}
+                  </span>
+                </template>
               </div>
             </div>
 
@@ -357,7 +305,7 @@
   import { useI18n } from '@/composables/useI18n'
   import { useGameConfig } from '@/composables/useGameConfig'
   import { computed, ref, onMounted, onUnmounted, watch } from 'vue'
-  import { useRoute, useRouter } from 'vue-router'
+  import { useRoute } from 'vue-router'
   import { ShipType, MissionType, BuildingType, TechnologyType } from '@/types/game'
   import type { Fleet, Resources } from '@/types/game'
   import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -380,6 +328,7 @@
     AlertDialogTitle
   } from '@/components/ui/alert-dialog'
   import UnlockRequirement from '@/components/UnlockRequirement.vue'
+  import { Empty, EmptyContent, EmptyDescription } from '@/components/ui/empty'
   import { Sword, Package, Rocket as RocketIcon, Eye, Users, Recycle, Skull, Gift, Compass } from 'lucide-vue-next'
   import { formatNumber, formatTime } from '@/utils/format'
   import * as shipValidation from '@/logic/shipValidation'
@@ -390,7 +339,6 @@
   import * as diplomaticLogic from '@/logic/diplomaticLogic'
 
   const route = useRoute()
-  const router = useRouter()
   const gameStore = useGameStore()
   const universeStore = useUniverseStore()
   const npcStore = useNPCStore()
@@ -417,6 +365,13 @@
 
   const activeTab = ref<'fleet' | 'send' | 'missions'>('fleet')
 
+  // Tab 配置
+  const fleetTabs = [
+    { value: 'fleet', labelKey: 'fleetOverview' },
+    { value: 'send', labelKey: 'sendFleet' },
+    { value: 'missions', labelKey: 'flightMissions' }
+  ] as const
+
   // 选择的舰队
   const selectedFleet = ref<Partial<Fleet>>({
     [ShipType.LightFighter]: 0,
@@ -435,11 +390,22 @@
   // 目标坐标
   const targetPosition = ref({ galaxy: 1, system: 1, position: 1 })
 
+  // 坐标字段配置
+  const coordinateFields: { key: keyof typeof targetPosition.value; max: number }[] = [
+    { key: 'galaxy', max: 9 },
+    { key: 'system', max: 10 },
+    { key: 'position', max: 10 }
+  ]
+
   // 选择的任务类型
   const selectedMission = ref<MissionType>(MissionType.Attack)
 
   // 运输资源
   const cargo = ref({ metal: 0, crystal: 0, deuterium: 0, darkMatter: 0, energy: 0 })
+
+  // 货物资源字段配置
+  type CargoKey = 'metal' | 'crystal' | 'deuterium' | 'darkMatter'
+  const cargoResourceFields: { key: CargoKey }[] = [{ key: 'metal' }, { key: 'crystal' }, { key: 'deuterium' }, { key: 'darkMatter' }]
 
   // 从 URL query 参数初始化
   onMounted(() => {
@@ -472,9 +438,6 @@
 
       // 自动切换到派遣舰队标签
       activeTab.value = 'send'
-
-      // 清除 URL 参数，保持 URL 整洁
-      router.replace({ path: '/fleet' })
     }
   })
 
@@ -551,6 +514,11 @@
   // 计算总货物
   const getTotalCargo = (): number => {
     return cargo.value.metal + cargo.value.crystal + cargo.value.deuterium + cargo.value.darkMatter
+  }
+
+  // 检查是否有携带资源
+  const hasCargoResources = (cargoData: Resources): boolean => {
+    return cargoData.metal > 0 || cargoData.crystal > 0 || cargoData.deuterium > 0 || cargoData.darkMatter > 0
   }
 
   // 计算燃料消耗（包含货物重量影响）

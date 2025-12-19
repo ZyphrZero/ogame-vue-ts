@@ -1,7 +1,13 @@
 <template>
-  <SidebarProvider :open="sidebarOpen" @update:open="handleSidebarOpenChange">
+  <!-- 首页：无侧边栏/头部 -->
+  <template v-if="isHomePage">
+    <RouterView />
+  </template>
+
+  <!-- 其他页面：完整布局（含侧边栏） -->
+  <SidebarProvider v-else :open="sidebarOpen" @update:open="handleSidebarOpenChange">
     <Sidebar collapsible="icon">
-      <!-- Logo -->
+      <!-- 标志 -->
       <SidebarHeader class="border-b">
         <div class="flex items-center justify-center p-4 group-data-[collapsible=icon]:p-2">
           <img src="@/assets/logo.svg" class="w-10 group-data-[collapsible=icon]:w-8" />
@@ -47,29 +53,38 @@
                     {{ t('planet.switchPlanet') }}
                   </div>
                   <div class="space-y-0.5 max-h-80 overflow-y-auto">
-                    <Button
-                      v-for="p in gameStore.player.planets"
-                      :key="p.id"
-                      @click="switchToPlanet(p.id)"
-                      :variant="p.id === planet.id ? 'secondary' : 'ghost'"
-                      class="w-full justify-start h-auto py-2 px-2"
-                      size="sm"
-                    >
-                      <div class="flex items-start gap-2 w-full min-w-0">
-                        <Globe class="h-4 w-4 flex-shrink-0 mt-0.5" :class="p.id === planet.id ? 'text-primary' : ''" />
-                        <div class="flex-1 min-w-0 text-left">
-                          <div class="flex items-center gap-1.5 mb-0.5">
-                            <span class="truncate font-medium text-sm">{{ p.name }}</span>
-                            <Badge v-if="p.isMoon" variant="outline" class="text-[10px] px-1 py-0 h-4">
-                              {{ t('planet.moon') }}
-                            </Badge>
-                          </div>
-                          <div class="text-[11px] text-muted-foreground">
-                            [{{ p.position.galaxy }}:{{ p.position.system }}:{{ p.position.position }}]
+                    <div v-for="p in gameStore.player.planets" :key="p.id" class="flex items-center gap-1">
+                      <Button
+                        @click="switchToPlanet(p.id)"
+                        :variant="p.id === planet.id ? 'secondary' : 'ghost'"
+                        class="flex-1 justify-start h-auto py-2 px-2"
+                        size="sm"
+                      >
+                        <div class="flex items-start gap-2 w-full min-w-0">
+                          <Globe class="h-4 w-4 flex-shrink-0 mt-0.5" :class="p.id === planet.id ? 'text-primary' : ''" />
+                          <div class="flex-1 min-w-0 text-left">
+                            <div class="flex items-center gap-1.5 mb-0.5">
+                              <span class="truncate font-medium text-sm">{{ p.name }}</span>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                class="h-2 w-2 p-0 flex-shrink-0"
+                                @click.stop="openRenameDialog(p.id, p.name)"
+                                :title="t('planet.renamePlanet')"
+                              >
+                                <Pencil class="h-2 w-2" />
+                              </Button>
+                              <Badge v-if="p.isMoon" variant="outline" class="text-[10px] px-1 py-0 h-4">
+                                {{ t('planet.moon') }}
+                              </Badge>
+                            </div>
+                            <div class="text-[11px] text-muted-foreground">
+                              [{{ p.position.galaxy }}:{{ p.position.system }}:{{ p.position.position }}]
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </Button>
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </PopoverContent>
@@ -185,7 +200,7 @@
 
     <!-- 主内容区 -->
     <SidebarInset>
-      <div class="flex flex-col h-full overflow-hidden pt-[60px]">
+      <div class="flex flex-col h-full pt-[60px]">
         <!-- 顶部资源栏 - 固定定位 -->
         <header
           v-if="planet"
@@ -244,19 +259,13 @@
                 </div>
               </div>
 
-              <!-- 右侧：展开按钮（仅移动端） + 状态 -->
+              <!-- 右侧：展开按钮（仅移动端） -->
               <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0 justify-end">
                 <!-- 移动端展开按钮 -->
                 <Button @click="resourceBarExpanded = !resourceBarExpanded" variant="ghost" size="sm" class="lg:hidden h-8 w-8 p-0">
                   <ChevronDown v-if="!resourceBarExpanded" class="h-4 w-4" />
                   <ChevronUp v-else class="h-4 w-4" />
                 </Button>
-
-                <!-- 外交通知 -->
-                <DiplomaticNotifications />
-
-                <!-- 队列通知 -->
-                <QueueNotifications />
               </div>
             </div>
           </div>
@@ -319,34 +328,53 @@
         </Transition>
 
         <!-- 即将到来的敌对舰队警告 -->
-        <IncomingFleetAlerts
-          v-if="gameStore.player.incomingFleetAlerts && gameStore.player.incomingFleetAlerts.length > 0"
-          :alerts="gameStore.player.incomingFleetAlerts"
-          @mark-as-read="removeIncomingFleetAlert"
-        />
+        <IncomingFleetAlerts @open-panel="openEnemyAlertPanel" />
 
         <!-- 内容区域 -->
-        <main class="flex-1 overflow-y-auto">
+        <main class="flex-1">
           <Transition name="page" mode="out-in">
             <div :key="$route.fullPath" class="h-full">
-              <StarsBackground v-if="isDark" :factor="0.05" :speed="50" star-color="#fff" class="h-full">
-                <div class="relative z-10 h-full">
-                  <RouterView />
-                </div>
-              </StarsBackground>
+              <!-- 背景动画开启时 -->
+              <template v-if="gameStore.player.backgroundEnabled">
+                <StarsBackground v-if="isDark" :factor="0.05" :speed="50" star-color="#fff" class="h-full">
+                  <div class="relative z-10 h-full">
+                    <RouterView />
+                  </div>
+                </StarsBackground>
 
-              <div v-else class="relative h-full w-full overflow-hidden">
-                <div class="relative z-10 h-full">
-                  <RouterView />
-                </div>
+                <div v-else class="relative h-full w-full overflow-hidden">
+                  <div class="relative z-10 h-full">
+                    <RouterView />
+                  </div>
 
-                <ParticlesBg class="absolute inset-0 z-0" :quantity="100" :ease="100" color="#000" :staticity="10" refresh />
+                  <ParticlesBg class="absolute inset-0 z-0" :quantity="100" :ease="100" color="#000" :staticity="10" refresh />
+                </div>
+              </template>
+
+              <!-- 背景动画关闭时 -->
+              <div v-else class="h-full">
+                <RouterView />
               </div>
             </div>
           </Transition>
         </main>
       </div>
     </SidebarInset>
+
+    <!-- 右下角固定通知按钮 -->
+    <div class="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
+      <!-- 返回顶部 -->
+      <BackToTop />
+
+      <!-- 队列通知 -->
+      <QueueNotifications />
+
+      <!-- 外交通知 -->
+      <DiplomaticNotifications />
+
+      <!-- 敌方警报 -->
+      <EnemyAlertNotifications ref="enemyAlertNotificationsRef" />
+    </div>
 
     <!-- 确认对话框 -->
     <AlertDialog :open="confirmDialogOpen" @update:open="confirmDialogOpen = $event">
@@ -370,11 +398,32 @@
     <!-- 更新弹窗 -->
     <UpdateDialog v-model:open="showUpdateDialog" :version-info="updateInfo" />
 
-    <!-- 新手引导 -->
-    <TutorialOverlay />
+    <!-- 弱引导提示系统 -->
+    <HintToast />
 
     <!-- Toast 通知 -->
     <Sonner position="top-center" />
+
+    <!-- 重命名星球对话框 -->
+    <Dialog v-model:open="renameDialogOpen">
+      <DialogContent class="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>{{ t('planet.renamePlanetTitle') }}</DialogTitle>
+          <DialogDescription class="sr-only">{{ t('planet.renamePlanetTitle') }}</DialogDescription>
+        </DialogHeader>
+        <div class="py-4">
+          <Input v-model="newPlanetName" :placeholder="t('planet.planetNamePlaceholder')" @keyup.enter="confirmRenamePlanet" />
+        </div>
+        <DialogFooter>
+          <Button variant="outline" @click="renameDialogOpen = false">
+            {{ t('common.cancel') }}
+          </Button>
+          <Button @click="confirmRenamePlanet" :disabled="!newPlanetName.trim()">
+            {{ t('planet.rename') }}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   </SidebarProvider>
 </template>
 
@@ -387,13 +436,15 @@
   import { useTheme } from '@/composables/useTheme'
   import { useI18n } from '@/composables/useI18n'
   import { useGameConfig } from '@/composables/useGameConfig'
-  import { useTutorial } from '@/composables/useTutorial'
   import { localeNames, detectBrowserLocale, type Locale } from '@/locales'
   import { Button } from '@/components/ui/button'
   import { Badge } from '@/components/ui/badge'
   import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
+  import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
+  import { Input } from '@/components/ui/input'
   import IncomingFleetAlerts from '@/components/IncomingFleetAlerts.vue'
   import DiplomaticNotifications from '@/components/DiplomaticNotifications.vue'
+  import EnemyAlertNotifications from '@/components/EnemyAlertNotifications.vue'
   import QueueNotifications from '@/components/QueueNotifications.vue'
   import {
     Sidebar,
@@ -422,14 +473,15 @@
   } from '@/components/ui/alert-dialog'
   import DetailDialog from '@/components/DetailDialog.vue'
   import UpdateDialog from '@/components/UpdateDialog.vue'
-  import TutorialOverlay from '@/components/TutorialOverlay.vue'
+  import HintToast from '@/components/HintToast.vue'
+  import BackToTop from '@/components/BackToTop.vue'
   import Sonner from '@/components/ui/sonner/Sonner.vue'
   import { MissionType, BuildingType, TechnologyType, DiplomaticEventType } from '@/types/game'
-  import type { FleetMission, NPC, IncomingFleetAlert, MissileAttack } from '@/types/game'
+  import type { FleetMission, NPC, MissileAttack } from '@/types/game'
   import { DIPLOMATIC_CONFIG } from '@/config/gameConfig'
   import type { VersionInfo } from '@/utils/versionCheck'
   import { formatNumber, getResourceColor } from '@/utils/format'
-  import { getGameLoopIntervalMs, scaleNumber, scaleResources } from '@/utils/speed'
+  import { scaleNumber, scaleResources } from '@/utils/speed'
   import {
     Moon,
     Sun,
@@ -450,7 +502,8 @@
     ChevronsUpDown,
     ChevronDown,
     ChevronUp,
-    Handshake
+    Handshake,
+    Pencil
   } from 'lucide-vue-next'
   import * as gameLogic from '@/logic/gameLogic'
   import * as planetLogic from '@/logic/planetLogic'
@@ -481,18 +534,140 @@
   const { isDark } = useTheme()
   const { t } = useI18n()
   const { BUILDINGS, TECHNOLOGIES } = useGameConfig()
-  const { startTutorial, tutorialState, currentStep } = useTutorial()
-
+  const enemyAlertNotificationsRef = ref<InstanceType<typeof EnemyAlertNotifications> | null>(null)
   // ConfirmDialog 状态
   const confirmDialogOpen = ref(false)
   const confirmDialogTitle = ref('')
   const confirmDialogMessage = ref('')
   const innerWidth = computed(() => window.innerWidth)
   const confirmDialogAction = ref<(() => void) | null>(null)
-
   // 更新弹窗状态
   const showUpdateDialog = ref(false)
   const updateInfo = ref<VersionInfo | null>(null)
+  // 所有可用的语言选项
+  const locales: Locale[] = ['zh-CN', 'zh-TW', 'en', 'de', 'ru', 'ko', 'ja']
+  // 侧边栏状态（不持久化，根据屏幕尺寸初始化）
+  // PC端（≥1024px）默认打开，移动端默认关闭
+  const sidebarOpen = ref(window.innerWidth >= 1024)
+  // 移动端资源栏展开状态
+  const resourceBarExpanded = ref(false)
+  const npcUpdateCounter = ref(0) // 累计秒数
+  const NPC_UPDATE_INTERVAL = 5 // 每1秒更新一次NPC，确保发育速度与玩家相当
+  // NPC行为系统更新函数（侦查和攻击决策）
+  const npcBehaviorCounter = ref(0)
+  const NPC_BEHAVIOR_INTERVAL = 5 // 每5秒检查一次NPC行为
+
+  // 游戏循环定时器
+  const gameLoop = ref<ReturnType<typeof setInterval> | null>(null)
+  const pointsUpdateInterval = ref<ReturnType<typeof setInterval> | null>(null)
+  const konamiCleanup = ref<(() => void) | null>(null)
+  const versionCheckInterval = ref<ReturnType<typeof setInterval> | null>(null) // 重命名星球相关状态
+  const renameDialogOpen = ref(false)
+  const renamingPlanetId = ref<string | null>(null)
+  const newPlanetName = ref('')
+  // 功能解锁要求配置
+  const featureRequirements: Record<string, { building: BuildingType; level: number }> = {
+    '/research': { building: BuildingType.ResearchLab, level: 1 },
+    '/shipyard': { building: BuildingType.Shipyard, level: 1 },
+    '/defense': { building: BuildingType.Shipyard, level: 1 },
+    '/fleet': { building: BuildingType.Shipyard, level: 1 }
+  }
+
+  // 判断是否为首页
+  const isHomePage = computed(() => router.currentRoute.value.path === '/')
+
+  // 定义 planet computed（需要在 watch 之前定义）
+  const planet = computed(() => gameStore.currentPlanet)
+
+  // 资源类型配置
+  const resourceTypes = [
+    { key: 'metal' as const },
+    { key: 'crystal' as const },
+    { key: 'deuterium' as const },
+    { key: 'energy' as const },
+    { key: 'darkMatter' as const }
+  ]
+
+  const navItems = computed(() => [
+    { name: computed(() => t('nav.overview')), path: '/overview', icon: Home },
+    { name: computed(() => t('nav.buildings')), path: '/buildings', icon: Building2 },
+    { name: computed(() => t('nav.research')), path: '/research', icon: FlaskConical },
+    { name: computed(() => t('nav.shipyard')), path: '/shipyard', icon: Ship },
+    { name: computed(() => t('nav.defense')), path: '/defense', icon: Shield },
+    { name: computed(() => t('nav.fleet')), path: '/fleet', icon: Rocket },
+    { name: computed(() => t('nav.officers')), path: '/officers', icon: Users },
+    { name: computed(() => t('nav.simulator')), path: '/battle-simulator', icon: Swords },
+    { name: computed(() => t('nav.galaxy')), path: '/galaxy', icon: Globe },
+    { name: computed(() => t('nav.diplomacy')), path: '/diplomacy', icon: Handshake },
+    { name: computed(() => t('nav.messages')), path: '/messages', icon: Mail },
+    { name: computed(() => t('nav.settings')), path: '/settings', icon: Settings },
+    // GM菜单在启用GM模式时显示
+    ...(gameStore.player.isGMEnabled ? [{ name: computed(() => t('nav.gm')), path: '/gm', icon: Wrench }] : [])
+  ])
+
+  // 使用直接计算，不再缓存
+  const production = computed(() => {
+    if (!planet.value) return null
+    const now = Date.now()
+    const bonuses = officerLogic.calculateActiveBonuses(gameStore.player.officers, now)
+    const base = resourceLogic.calculateResourceProduction(planet.value, {
+      resourceProductionBonus: bonuses.resourceProductionBonus,
+      darkMatterProductionBonus: bonuses.darkMatterProductionBonus,
+      energyProductionBonus: bonuses.energyProductionBonus
+    })
+    return scaleResources(base, gameStore.gameSpeed)
+  })
+
+  const capacity = computed(() => {
+    if (!planet.value) return null
+    const now = Date.now()
+    const bonuses = officerLogic.calculateActiveBonuses(gameStore.player.officers, now)
+    return resourceLogic.calculateResourceCapacity(planet.value, bonuses.storageCapacityBonus)
+  })
+
+  // 电力消耗
+  const energyConsumption = computed(() => {
+    if (!planet.value) return 0
+    return scaleNumber(resourceLogic.calculateEnergyConsumption(planet.value), gameStore.gameSpeed)
+  })
+
+  // 净电力（产量 - 消耗）
+  const netEnergy = computed(() => {
+    if (!planet.value || !production.value) return 0
+    return production.value.energy - energyConsumption.value
+  })
+
+  // 未读消息数量
+  const unreadMessagesCount = computed(() => {
+    const unreadBattles = gameStore.player.battleReports.filter(r => !r.read).length
+    const unreadSpies = gameStore.player.spyReports.filter(r => !r.read).length
+    const unreadSpied = gameStore.player.spiedNotifications?.filter(n => !n.read).length || 0
+    const unreadMissions = gameStore.player.missionReports?.filter(r => !r.read).length || 0
+    const unreadNPCActivity = gameStore.player.npcActivityNotifications?.filter(n => !n.read).length || 0
+    const unreadGifts = gameStore.player.giftNotifications?.filter(n => !n.read).length || 0
+    const unreadGiftRejected = gameStore.player.giftRejectedNotifications?.filter(n => !n.read).length || 0
+    return unreadBattles + unreadSpies + unreadSpied + unreadMissions + unreadNPCActivity + unreadGifts + unreadGiftRejected
+  })
+
+  // 正在执行的舰队任务数量（包括飞行中的导弹）
+  const activeFleetMissionsCount = computed(() => {
+    const fleetMissions = gameStore.player.fleetMissions.filter(m => m.status === 'outbound' || m.status === 'returning').length
+    const flyingMissiles = gameStore.player.missileAttacks?.filter(m => m.status === 'flying').length || 0
+    return fleetMissions + flyingMissiles
+  })
+
+  // 未读外交报告数量
+  const unreadDiplomaticReportsCount = computed(() => {
+    return (gameStore.player.diplomaticReports || []).filter(r => !r.read).length
+  })
+
+  // 月球相关
+  const moon = computed(() => {
+    if (!planet.value || planet.value.isMoon) return null
+    return gameStore.getMoonForPlanet(planet.value.id)
+  })
+
+  const hasMoon = computed(() => !!moon.value)
 
   const handleNotification = (type: string, itemType: string, level?: number) => {
     const settings = gameStore.notificationSettings
@@ -502,7 +677,7 @@
     if (!settings.browser && !settings.inApp) return
 
     // 检查具体类型开关
-    let typeKey = ''
+    let typeKey: 'construction' | 'research'
     let title = ''
     let body = ''
 
@@ -544,16 +719,6 @@
     }
     confirmDialogOpen.value = false
   }
-
-  // 所有可用的语言选项
-  const locales: Locale[] = ['zh-CN', 'zh-TW', 'en', 'de', 'ru', 'ko', 'ja']
-
-  // 侧边栏状态（不持久化，根据屏幕尺寸初始化）
-  // PC端（≥1024px）默认打开，移动端默认关闭
-  const sidebarOpen = ref(window.innerWidth >= 1024)
-
-  // 移动端资源栏展开状态
-  const resourceBarExpanded = ref(false)
 
   const initGame = async () => {
     const shouldInit = gameLogic.shouldInitializeGame(gameStore.player.planets)
@@ -687,6 +852,8 @@
     const originPlanetName = originPlanet?.name || t('fleetView.unknownPlanet')
 
     if (mission.missionType === MissionType.Transport) {
+      // 在处理任务之前保存货物信息（因为processTransportArrival会清空cargo）
+      const transportedResources = { ...mission.cargo }
       const result = fleetLogic.processTransportArrival(mission, targetPlanet, gameStore.player, npcStore.npcs)
       // 生成运输任务报告
       if (!gameStore.player.missionReports) {
@@ -705,7 +872,7 @@
         success: result.success,
         message: result.success ? t('missionReports.transportSuccess') : t('missionReports.transportFailed'),
         details: {
-          transportedResources: mission.cargo
+          transportedResources
         },
         read: false
       })
@@ -982,7 +1149,20 @@
 
           // 如果生成残骸场，添加到宇宙残骸场列表
           if (attackResult.debrisField) {
-            universeStore.debrisFields[attackResult.debrisField.id] = attackResult.debrisField
+            const existingDebris = universeStore.debrisFields[attackResult.debrisField.id]
+            if (existingDebris) {
+              // 累加残骸资源
+              universeStore.debrisFields[attackResult.debrisField.id] = {
+                ...existingDebris,
+                resources: {
+                  metal: existingDebris.resources.metal + attackResult.debrisField.resources.metal,
+                  crystal: existingDebris.resources.crystal + attackResult.debrisField.resources.crystal
+                }
+              }
+            } else {
+              // 新残骸场
+              universeStore.debrisFields[attackResult.debrisField.id] = attackResult.debrisField
+            }
           }
         }
 
@@ -1078,19 +1258,7 @@
         const { REPUTATION_CHANGES } = DIPLOMATIC_CONFIG
         const reputationLoss = REPUTATION_CHANGES.ATTACK / 2 // 导弹攻击的好感度惩罚是普通攻击的一半
 
-        // 更新玩家对NPC的关系
-        if (!gameStore.player.diplomaticRelations) {
-          gameStore.player.diplomaticRelations = {}
-        }
-        const relation = diplomaticLogic.getOrCreateRelation(gameStore.player.diplomaticRelations, gameStore.player.id, targetNpc.id)
-        gameStore.player.diplomaticRelations[targetNpc.id] = diplomaticLogic.updateReputation(
-          relation,
-          reputationLoss,
-          DiplomaticEventType.Attack,
-          t('diplomacy.reports.missileAttackNpc', { npcName: targetNpc.name })
-        )
-
-        // 更新NPC对玩家的关系
+        // 更新NPC对玩家的关系（统一使用 npc.relations 作为唯一数据源）
         if (!targetNpc.relations) {
           targetNpc.relations = {}
         }
@@ -1137,13 +1305,9 @@
     })
   }
 
-  // 移除即将到来的舰队警告
-  const removeIncomingFleetAlert = (alert: IncomingFleetAlert) => {
-    if (!gameStore.player.incomingFleetAlerts) return
-    const index = gameStore.player.incomingFleetAlerts.indexOf(alert)
-    if (index > -1) {
-      gameStore.player.incomingFleetAlerts.splice(index, 1)
-    }
+  // 打开敌方警报面板
+  const openEnemyAlertPanel = () => {
+    enemyAlertNotificationsRef.value?.open()
   }
 
   const removeIncomingFleetAlertById = (missionId: string) => {
@@ -1154,16 +1318,12 @@
     }
   }
 
-  // NPC成长系统更新函数
-  let npcUpdateCounter = 0 // 累计秒数
-  const NPC_UPDATE_INTERVAL = 5 // 每1秒更新一次NPC，确保发育速度与玩家相当
-
   const updateNPCGrowth = (deltaSeconds: number) => {
     // 累积时间
-    npcUpdateCounter += deltaSeconds
+    npcUpdateCounter.value += deltaSeconds
 
     // 只在达到更新间隔时才执行
-    if (npcUpdateCounter < NPC_UPDATE_INTERVAL) {
+    if (npcUpdateCounter.value < NPC_UPDATE_INTERVAL) {
       return
     }
 
@@ -1185,13 +1345,24 @@
           const randomSpyOffset = Math.random() * 240 * 1000 // 0-4分钟的随机延迟
           const randomAttackOffset = Math.random() * 480 * 1000 // 0-8分钟的随机延迟
 
+          // 初始化NPC与玩家的中立关系
+          const initialRelations: Record<string, any> = {}
+          initialRelations[gameStore.player.id] = {
+            fromId: planet.ownerId,
+            toId: gameStore.player.id,
+            reputation: 0,
+            status: 'neutral' as const,
+            lastUpdated: now,
+            history: []
+          }
+
           npcMap.set(planet.ownerId, {
             id: planet.ownerId,
             name: `NPC-${planet.ownerId.substring(0, 8)}`,
             planets: [],
             technologies: {}, // 初始化空科技树
             difficulty: 'medium' as const, // 默认中等难度
-            relations: {}, // 外交关系
+            relations: initialRelations, // 外交关系（默认与玩家中立）
             allies: [], // 盟友列表
             enemies: [], // 敌人列表
             lastSpyTime: now - randomSpyOffset, // 设置随机的上次侦查时间
@@ -1231,9 +1402,30 @@
       npcGrowthLogic.ensureNPCSpyProbes(npcStore.npcs)
     }
 
+    // 确保所有NPC都与玩家建立了关系（修复旧版本保存的数据）
+    if (npcStore.npcs.length > 0) {
+      const now = Date.now()
+      npcStore.npcs.forEach(npc => {
+        if (!npc.relations) {
+          npc.relations = {}
+        }
+        // 如果NPC没有与玩家的关系，建立中立关系
+        if (!npc.relations[gameStore.player.id]) {
+          npc.relations[gameStore.player.id] = {
+            fromId: npc.id,
+            toId: gameStore.player.id,
+            reputation: 0,
+            status: 'neutral' as const,
+            lastUpdated: now,
+            history: []
+          }
+        }
+      })
+    }
+
     // 如果没有NPC，直接返回
     if (npcStore.npcs.length === 0) {
-      npcUpdateCounter = 0
+      npcUpdateCounter.value = 0
       return
     }
 
@@ -1244,31 +1436,27 @@
       npcs: npcStore.npcs
     }
 
-    // 使用累积的时间更新每个NPC
+    // 使用累积的时间更新每个NPC（应用游戏速度倍率）
     npcStore.npcs.forEach(npc => {
-      npcGrowthLogic.updateNPCGrowth(npc, gameState, npcUpdateCounter)
+      npcGrowthLogic.updateNPCGrowth(npc, gameState, npcUpdateCounter.value, gameStore.gameSpeed)
     })
 
     // 重置计数器
-    npcUpdateCounter = 0
+    npcUpdateCounter.value = 0
   }
-
-  // NPC行为系统更新函数（侦查和攻击决策）
-  let npcBehaviorCounter = 0
-  const NPC_BEHAVIOR_INTERVAL = 5 // 每5秒检查一次NPC行为
 
   const updateNPCBehavior = (deltaSeconds: number) => {
     // 累积时间
-    npcBehaviorCounter += deltaSeconds
+    npcBehaviorCounter.value += deltaSeconds
 
     // 只在达到更新间隔时才执行
-    if (npcBehaviorCounter < NPC_BEHAVIOR_INTERVAL) {
+    if (npcBehaviorCounter.value < NPC_BEHAVIOR_INTERVAL) {
       return
     }
 
     // 如果没有NPC，直接返回
     if (npcStore.npcs.length === 0) {
-      npcBehaviorCounter = 0
+      npcBehaviorCounter.value = 0
       return
     }
 
@@ -1276,126 +1464,89 @@
     // 合并玩家星球和NPC星球到allPlanets（NPC需要能够侦查和攻击玩家星球）
     const allPlanets = [...gameStore.player.planets, ...Object.values(universeStore.planets)]
 
-    // 更新每个NPC的行为
+    // 计算当前所有正在进行的侦查和攻击任务数量
+    let activeSpyMissions = 0
+    let activeAttackMissions = 0
     npcStore.npcs.forEach(npc => {
-      npcBehaviorLogic.updateNPCBehavior(npc, gameStore.player, allPlanets, universeStore.debrisFields, now)
+      if (npc.fleetMissions) {
+        npc.fleetMissions.forEach(mission => {
+          if (mission.status === 'outbound') {
+            if (mission.missionType === 'spy') {
+              activeSpyMissions++
+            } else if (mission.missionType === 'attack') {
+              activeAttackMissions++
+            }
+          }
+        })
+      }
     })
 
-    npcBehaviorCounter = 0
-  }
+    // 获取并发限制配置
+    const config = npcBehaviorLogic.calculateDynamicBehavior(gameStore.player.points)
 
-  // 游戏循环定时器
-  let gameLoop: ReturnType<typeof setInterval> | null = null
-  let pointsUpdateInterval: ReturnType<typeof setInterval> | null = null
-  let konamiCleanup: (() => void) | null = null
-  let versionCheckInterval: ReturnType<typeof setInterval> | null = null
+    // 更新每个NPC的行为（随机顺序，避免总是优先处理同一批NPC）
+    const shuffledNpcs = [...npcStore.npcs].sort(() => Math.random() - 0.5)
+    shuffledNpcs.forEach(npc => {
+      // 在更新前检查当前并发数，如果已达上限则跳过该NPC
+      npcBehaviorLogic.updateNPCBehaviorWithLimit(npc, gameStore.player, allPlanets, universeStore.debrisFields, now, {
+        activeSpyMissions,
+        activeAttackMissions,
+        config
+      })
+
+      // 重新计算当前并发数（因为可能新增了任务）
+      activeSpyMissions = 0
+      activeAttackMissions = 0
+      npcStore.npcs.forEach(n => {
+        if (n.fleetMissions) {
+          n.fleetMissions.forEach(mission => {
+            if (mission.status === 'outbound') {
+              if (mission.missionType === 'spy') activeSpyMissions++
+              else if (mission.missionType === 'attack') activeAttackMissions++
+            }
+          })
+        }
+      })
+    })
+
+    npcBehaviorCounter.value = 0
+  }
 
   // 启动游戏循环
   const startGameLoop = () => {
+    if (gameStore.isPaused) return
     // 清理旧的定时器
-    if (gameLoop) {
-      clearInterval(gameLoop)
+    if (gameLoop.value) {
+      clearInterval(gameLoop.value)
     }
-    // 根据游戏速度计算间隔时间
-    const interval = getGameLoopIntervalMs(gameStore.gameSpeed)
+    // 游戏循环固定为1秒，避免高倍速时的卡顿
+    // gameSpeed 只作用于资源产出和时间消耗的倍率
+    const interval = 1000
     // 启动新的游戏循环
-    gameLoop = setInterval(() => {
+    gameLoop.value = setInterval(() => {
       updateGame()
     }, interval)
   }
 
+  // 停止游戏循环
+  const stopGameLoop = () => {
+    if (gameLoop.value) {
+      clearInterval(gameLoop.value)
+      gameLoop.value = null
+    }
+  }
+
   // 启动积分更新定时器（每10秒更新一次）
   const startPointsUpdate = () => {
-    if (pointsUpdateInterval) {
-      clearInterval(pointsUpdateInterval)
+    if (pointsUpdateInterval.value) {
+      clearInterval(pointsUpdateInterval.value)
     }
-    pointsUpdateInterval = setInterval(() => {
+    pointsUpdateInterval.value = setInterval(() => {
       if (!gameStore.isPaused) {
         gameStore.player.points = publicLogic.calculatePlayerPoints(gameStore.player)
       }
     }, 10000) // 10秒更新一次
   }
-
-  // 监听游戏速度变化，重新启动游戏循环
-  watch(
-    () => gameStore.gameSpeed,
-    () => {
-      if (gameLoop) {
-        startGameLoop()
-      }
-    }
-  )
-
-  // 初始化游戏
-  onMounted(async () => {
-    // 如果是首次访问（没有星球数据），使用浏览器语言自动检测
-    const isFirstVisit = gameStore.player.planets.length === 0
-    if (isFirstVisit) {
-      gameStore.locale = detectBrowserLocale()
-    }
-    await initGame()
-    // 启动游戏循环
-    startGameLoop()
-    // 启动积分更新定时器
-    startPointsUpdate()
-    // 启动科乐美秘籍监听
-    konamiCleanup = setupKonamiCode()
-
-    // 启动新手引导（如果尚未完成）
-    startTutorial()
-
-    // 添加队列取消事件监听
-    window.addEventListener('cancel-build', handleCancelBuildEvent as EventListener)
-    window.addEventListener('cancel-research', handleCancelResearchEvent as EventListener)
-
-    // 首次检查版本（被动检测）
-    const versionInfo = await checkLatestVersion(gameStore.player.lastVersionCheckTime || 0, (time: number) => {
-      gameStore.player.lastVersionCheckTime = time
-    })
-    if (versionInfo) {
-      updateInfo.value = versionInfo
-      toast.info(t('settings.newVersionAvailable', { version: versionInfo.version }), {
-        duration: Infinity,
-        dismissible: true,
-        action: {
-          label: t('settings.viewUpdate'),
-          onClick: () => {
-            showUpdateDialog.value = true
-          }
-        }
-      })
-    }
-    // 启动版本检查定时器（每5分钟被动检查一次）
-    versionCheckInterval = setInterval(async () => {
-      const versionInfo = await checkLatestVersion(gameStore.player.lastVersionCheckTime || 0, (time: number) => {
-        gameStore.player.lastVersionCheckTime = time
-      })
-      if (versionInfo) {
-        updateInfo.value = versionInfo
-        toast.info(t('settings.newVersionAvailable', { version: versionInfo.version }), {
-          duration: Infinity,
-          dismissible: true,
-          action: {
-            label: t('settings.viewUpdate'),
-            onClick: () => {
-              showUpdateDialog.value = true
-            }
-          }
-        })
-      }
-    }, 5 * 60 * 1000)
-  })
-
-  // 清理定时器
-  onUnmounted(() => {
-    if (gameLoop) clearInterval(gameLoop)
-    if (pointsUpdateInterval) clearInterval(pointsUpdateInterval)
-    if (konamiCleanup) konamiCleanup()
-    if (versionCheckInterval) clearInterval(versionCheckInterval)
-    // 移除队列取消事件监听
-    window.removeEventListener('cancel-build', handleCancelBuildEvent as EventListener)
-    window.removeEventListener('cancel-research', handleCancelResearchEvent as EventListener)
-  })
 
   // 处理取消建造事件
   const handleCancelBuildEvent = (event: CustomEvent) => {
@@ -1438,32 +1589,25 @@
     }
   }
 
-  // 定义 planet computed（需要在 watch 之前定义）
-  const planet = computed(() => gameStore.currentPlanet)
+  // 打开重命名对话框
+  const openRenameDialog = (planetId: string, currentName: string) => {
+    renamingPlanetId.value = planetId
+    newPlanetName.value = currentName
+    renameDialogOpen.value = true
+  }
 
-  const navItems = computed(() => [
-    { name: computed(() => t('nav.overview')), path: '/', icon: Home },
-    { name: computed(() => t('nav.buildings')), path: '/buildings', icon: Building2 },
-    { name: computed(() => t('nav.research')), path: '/research', icon: FlaskConical },
-    { name: computed(() => t('nav.shipyard')), path: '/shipyard', icon: Ship },
-    { name: computed(() => t('nav.defense')), path: '/defense', icon: Shield },
-    { name: computed(() => t('nav.fleet')), path: '/fleet', icon: Rocket },
-    { name: computed(() => t('nav.officers')), path: '/officers', icon: Users },
-    { name: computed(() => t('nav.simulator')), path: '/battle-simulator', icon: Swords },
-    { name: computed(() => t('nav.galaxy')), path: '/galaxy', icon: Globe },
-    { name: computed(() => t('nav.diplomacy')), path: '/diplomacy', icon: Handshake },
-    { name: computed(() => t('nav.messages')), path: '/messages', icon: Mail },
-    { name: computed(() => t('nav.settings')), path: '/settings', icon: Settings },
-    // GM菜单在启用GM模式时显示
-    ...(gameStore.player.isGMEnabled ? [{ name: computed(() => t('nav.gm')), path: '/gm', icon: Wrench }] : [])
-  ])
+  // 确认重命名
+  const confirmRenamePlanet = () => {
+    if (!renamingPlanetId.value || !newPlanetName.value.trim()) return
 
-  // 功能解锁要求配置
-  const featureRequirements: Record<string, { building: BuildingType; level: number }> = {
-    '/research': { building: BuildingType.ResearchLab, level: 1 },
-    '/shipyard': { building: BuildingType.Shipyard, level: 1 },
-    '/defense': { building: BuildingType.Shipyard, level: 1 },
-    '/fleet': { building: BuildingType.Shipyard, level: 1 }
+    const targetPlanet = gameStore.player.planets.find(p => p.id === renamingPlanetId.value)
+    if (targetPlanet) {
+      targetPlanet.name = newPlanetName.value.trim()
+    }
+
+    renameDialogOpen.value = false
+    renamingPlanetId.value = null
+    newPlanetName.value = ''
   }
 
   // 检查功能是否解锁
@@ -1508,78 +1652,6 @@
     router.push(path)
   }
 
-  // 使用直接计算，不再缓存
-  const production = computed(() => {
-    if (!planet.value) return null
-    const now = Date.now()
-    const bonuses = officerLogic.calculateActiveBonuses(gameStore.player.officers, now)
-    const base = resourceLogic.calculateResourceProduction(planet.value, {
-      resourceProductionBonus: bonuses.resourceProductionBonus,
-      darkMatterProductionBonus: bonuses.darkMatterProductionBonus,
-      energyProductionBonus: bonuses.energyProductionBonus
-    })
-    return scaleResources(base, gameStore.gameSpeed)
-  })
-
-  const capacity = computed(() => {
-    if (!planet.value) return null
-    const now = Date.now()
-    const bonuses = officerLogic.calculateActiveBonuses(gameStore.player.officers, now)
-    return resourceLogic.calculateResourceCapacity(planet.value, bonuses.storageCapacityBonus)
-  })
-
-  // 电力消耗
-  const energyConsumption = computed(() => {
-    if (!planet.value) return 0
-    return scaleNumber(resourceLogic.calculateEnergyConsumption(planet.value), gameStore.gameSpeed)
-  })
-
-  // 净电力（产量 - 消耗）
-  const netEnergy = computed(() => {
-    if (!planet.value || !production.value) return 0
-    return production.value.energy - energyConsumption.value
-  })
-
-  // 未读消息数量
-  const unreadMessagesCount = computed(() => {
-    const unreadBattles = gameStore.player.battleReports.filter(r => !r.read).length
-    const unreadSpies = gameStore.player.spyReports.filter(r => !r.read).length
-    const unreadSpied = gameStore.player.spiedNotifications?.filter(n => !n.read).length || 0
-    const unreadMissions = gameStore.player.missionReports?.filter(r => !r.read).length || 0
-    const unreadNPCActivity = gameStore.player.npcActivityNotifications?.filter(n => !n.read).length || 0
-    const unreadGifts = gameStore.player.giftNotifications?.filter(n => !n.read).length || 0
-    const unreadGiftRejected = gameStore.player.giftRejectedNotifications?.filter(n => !n.read).length || 0
-    return unreadBattles + unreadSpies + unreadSpied + unreadMissions + unreadNPCActivity + unreadGifts + unreadGiftRejected
-  })
-
-  // 正在执行的舰队任务数量（包括飞行中的导弹）
-  const activeFleetMissionsCount = computed(() => {
-    const fleetMissions = gameStore.player.fleetMissions.filter(m => m.status === 'outbound' || m.status === 'returning').length
-    const flyingMissiles = gameStore.player.missileAttacks?.filter(m => m.status === 'flying').length || 0
-    return fleetMissions + flyingMissiles
-  })
-
-  // 未读外交报告数量
-  const unreadDiplomaticReportsCount = computed(() => {
-    return (gameStore.player.diplomaticReports || []).filter(r => !r.read).length
-  })
-
-  // 资源类型配置
-  const resourceTypes = [
-    { key: 'metal' as const },
-    { key: 'crystal' as const },
-    { key: 'deuterium' as const },
-    { key: 'energy' as const },
-    { key: 'darkMatter' as const }
-  ]
-
-  // 月球相关
-  const moon = computed(() => {
-    if (!planet.value || planet.value.isMoon) return null
-    return gameStore.getMoonForPlanet(planet.value.id)
-  })
-  const hasMoon = computed(() => !!moon.value)
-
   // 切换到月球
   const switchToMoon = () => {
     if (moon.value) {
@@ -1606,19 +1678,6 @@
 
   // 处理侧边栏打开/关闭状态变化
   const handleSidebarOpenChange = (open: boolean) => {
-    // 如果是移动端且在教程的菜单相关步骤,阻止关闭侧边栏
-    if (window.innerWidth < 768 && tutorialState.value.isActive && currentStep.value) {
-      // 只在第3步期间阻止关闭侧边栏，让玩家必须手动打开
-      if (currentStep.value.id === 'menu_intro_mobile') {
-        // 只允许打开,不允许关闭
-        if (open) {
-          sidebarOpen.value = true
-        }
-        // 如果试图关闭,忽略该操作,保持打开状态
-        return
-      }
-    }
-    // 其他情况正常更新
     sidebarOpen.value = open
   }
 
@@ -1657,6 +1716,92 @@
     }
     confirmDialogOpen.value = true
   }
+
+  // 监听暂停状态变化
+  watch(
+    () => gameStore.isPaused,
+    isPaused => {
+      if (isPaused) {
+        stopGameLoop()
+      } else {
+        startGameLoop()
+      }
+    }
+  )
+
+  // 初始化游戏
+  onMounted(async () => {
+    try {
+      // 如果是首次访问（没有星球数据），使用浏览器语言自动检测
+      const isFirstVisit = gameStore.player.planets.length === 0
+      if (isFirstVisit) {
+        gameStore.locale = detectBrowserLocale()
+      }
+      await initGame()
+      // 启动游戏循环
+      startGameLoop()
+      // 启动积分更新定时器
+      startPointsUpdate()
+      // 启动科乐美秘籍监听
+      konamiCleanup.value = setupKonamiCode()
+
+      // 添加队列取消事件监听
+      window.addEventListener('cancel-build', handleCancelBuildEvent as EventListener)
+      window.addEventListener('cancel-research', handleCancelResearchEvent as EventListener)
+
+      // 首次检查版本（被动检测）
+      const versionInfo = await checkLatestVersion(gameStore.player.lastVersionCheckTime || 0, (time: number) => {
+        gameStore.player.lastVersionCheckTime = time
+      })
+      if (versionInfo) {
+        updateInfo.value = versionInfo
+        toast.info(t('settings.newVersionAvailable', { version: versionInfo.version }), {
+          duration: Infinity,
+          dismissible: true,
+          action: {
+            label: t('settings.viewUpdate'),
+            onClick: () => {
+              showUpdateDialog.value = true
+            }
+          }
+        })
+      }
+      // 启动版本检查定时器（每5分钟被动检查一次）
+      versionCheckInterval.value = setInterval(async () => {
+        const versionInfo = await checkLatestVersion(gameStore.player.lastVersionCheckTime || 0, (time: number) => {
+          gameStore.player.lastVersionCheckTime = time
+        })
+        if (versionInfo) {
+          updateInfo.value = versionInfo
+          toast.info(t('settings.newVersionAvailable', { version: versionInfo.version }), {
+            duration: Infinity,
+            dismissible: true,
+            action: {
+              label: t('settings.viewUpdate'),
+              onClick: () => {
+                showUpdateDialog.value = true
+              }
+            }
+          })
+        }
+      }, 5 * 60 * 1000)
+    } catch (error) {
+      console.error('Error during game initialization:', error)
+      // 即使初始化失败，也尝试启动基本的游戏循环
+      startGameLoop()
+    }
+  })
+
+  // 清理定时器
+  onUnmounted(() => {
+    if (gameLoop.value) clearInterval(gameLoop.value)
+    if (pointsUpdateInterval.value) clearInterval(pointsUpdateInterval.value)
+    if (konamiCleanup.value) konamiCleanup.value()
+    if (versionCheckInterval.value) clearInterval(versionCheckInterval.value)
+    // 移除队列取消事件监听
+    window.removeEventListener('cancel-build', handleCancelBuildEvent as EventListener)
+    window.removeEventListener('cancel-research', handleCancelResearchEvent as EventListener)
+  })
 </script>
 
 <style scoped>

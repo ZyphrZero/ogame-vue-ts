@@ -213,13 +213,6 @@ ogame-vue-ts/
 
 欢迎贡献！请随时提交 issue 或 pull request。
 
-### Issue 模板
-我们提供以下中英文 issue 模板：
-- BUG反馈 / Bug Report
-- 功能请求 / Feature Request
-- 文档改进 / Documentation Improvement
-- 反馈建议 / Feedback & Suggestion
-
 ## 许可证
 
 本作品采用 [知识共享署名-非商业性使用 4.0 国际许可协议](https://creativecommons.org/licenses/by-nc/4.0/) 进行许可。

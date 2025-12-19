@@ -569,11 +569,17 @@ export interface Player {
   isGMEnabled?: boolean // GM模式开关（默认false，通过秘籍激活）
   lastVersionCheckTime?: number // 最后一次自动检查版本的时间戳（被动检测）
   lastManualUpdateCheck?: number // 最后一次手动检查更新的时间戳（主动检测）
-  // 外交系统字段
-  diplomaticRelations?: Record<string, DiplomaticRelation> // 玩家对NPC的关系（key: npcId）
+  // 外交系统字段（外交关系存储在 NPC.relations 中）
   diplomaticReports?: DiplomaticReport[] // 外交变化报告
   // 新手引导字段
   tutorialProgress?: TutorialProgress // 新手引导进度
+  // 隐私协议同意状态
+  privacyAgreed?: boolean // 是否已同意隐私协议
+  // 弱引导系统
+  dismissedHints?: string[] // 已关闭的提示ID列表
+  hintsEnabled?: boolean // 是否启用弱引导提示（默认true）
+  // 显示设置
+  backgroundEnabled?: boolean // 是否启用背景动画（默认false）
 }
 
 export interface NotificationSettings {
@@ -609,6 +615,7 @@ export interface Universe {
 export interface NPC {
   id: string
   name: string
+  note?: string // 玩家添加的备注
   planets: Planet[]
   technologies: Record<TechnologyType, number>
   difficulty: 'easy' | 'medium' | 'hard'

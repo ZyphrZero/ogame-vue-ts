@@ -1,4 +1,13 @@
 export default {
+  home: {
+    subtitle: '征服星辰大海',
+    startGame: '開始遊戲',
+    privacyAgreement: '隱私協議',
+    privacyAgreementDesc: '開始遊戲前，請閱讀並同意我們的隱私協議。',
+    agreeToPrivacy: '我已閱讀並同意',
+    viewFullPolicy: '查看完整協議',
+    agreeAndStart: '同意並開始'
+  },
   common: {
     confirm: '確認',
     cancel: '取消',
@@ -36,7 +45,8 @@ export default {
     requirementsNotMet: '前置條件未滿足',
     current: '當前',
     level: '等級',
-    gmModeActivated: 'GM 模式已啟用！請查看導航選單。'
+    gmModeActivated: 'GM 模式已啟用！請查看導航選單。',
+    view: '查看'
   },
   errors: {
     requirementsNotMet: '不滿足前置條件',
@@ -113,7 +123,13 @@ export default {
     homePlanet: '母星',
     planetPrefix: '星球',
     moonSuffix: '的月球',
-    colonyPrefix: '殖民地'
+    colonyPrefix: '殖民地',
+    renamePlanet: '重命名星球',
+    renamePlanetTitle: '重命名星球',
+    newPlanetName: '新名稱',
+    planetNamePlaceholder: '輸入新的星球名稱',
+    rename: '重命名',
+    renameSuccess: '星球已重命名為 {name}'
   },
   player: {
     points: '總積分'
@@ -286,7 +302,8 @@ export default {
     hyperspaceTechnology: '超空間跳躍技術',
     plasmaTechnology: '等離子武器技術',
     computerTechnology: '增加研究佇列和艦隊任務槽位，每級+1佇列+1槽位（最多10級）',
-    espionageTechnology: '提高間諜探測效果，每級提高1級偵查深度。偵察等級=己方等級-對方等級+偵察船數/5。≥-1顯示艦隊，≥1顯示防禦，≥3顯示建築，≥5顯示科技',
+    espionageTechnology:
+      '提高間諜探測效果，每級提高1級偵查深度。偵察等級=己方等級-對方等級+偵察船數/5。≥-1顯示艦隊，≥1顯示防禦，≥3顯示建築，≥5顯示科技',
     weaponsTechnology: '提高艦船和防禦的攻擊力，每級+10%',
     shieldingTechnology: '提高艦船和防禦的護盾值，每級+10%',
     armourTechnology: '提高艦船和防禦的裝甲值，每級+10%',
@@ -319,8 +336,8 @@ export default {
     darkMatterSpecialist: '提升暗物質採集效率'
   },
   queue: {
-    title: '建造佇列',
-    empty: '當前沒有進行中的任務',
+    title: '進行中的任務',
+    empty: '當前沒有進行中的隊列',
     buildQueue: '建造佇列',
     researchQueue: '研究佇列',
     building: '建造中',
@@ -333,7 +350,14 @@ export default {
     confirmCancel: '確定要取消嗎？將返還50%的資源。',
     level: '等級',
     gmModeActivated: '',
-    upgradeToLevel: '升級到等級'
+    upgradeToLevel: '升級到等級',
+    tabs: {
+      all: '全部',
+      buildings: '建築',
+      research: '研究',
+      ships: '艦船',
+      defense: '防禦'
+    }
   },
   overview: {
     title: '星球總覽',
@@ -587,7 +611,8 @@ export default {
     sendGift: '贈送禮物',
     debris: '殘骸',
     giftPlanetTitle: '贈送禮物',
-    giftPlanetMessage: '確定要向星球 [{coordinates}] 贈送資源嗎？\n\n請前往艦隊頁面選擇運輸船並裝載資源。'
+    giftPlanetMessage: '確定要向星球 [{coordinates}] 贈送資源嗎？\n\n請前往艦隊頁面選擇運輸船並裝載資源。',
+    npcPlanetName: '{name}的星球'
   },
   messagesView: {
     title: '訊息中心',
@@ -621,6 +646,7 @@ export default {
     targetPlanet: '目標星球',
     attackerRemaining: '攻擊方剩餘',
     defenderRemaining: '防守方剩餘',
+    allDestroyed: '全部摧毀',
     moonChance: '月球生成機率',
     showRoundDetails: '顯示回合詳情',
     hideRoundDetails: '隱藏回合詳情',
@@ -686,7 +712,17 @@ export default {
     activityDescription: '',
     npcActivityMessage: '',
     arrivalTime: '',
-    npcActivityTip: ''
+    npcActivityTip: '',
+    clearMessages: '清空訊息',
+    clearMessageTypes: '選擇要清空的訊息類型',
+    clearBattleReports: '戰鬥報告',
+    clearSpyReports: '間諜報告',
+    clearSpiedNotifications: '被偵查通知',
+    clearMissionReports: '任務報告',
+    clearNPCActivity: 'NPC活動',
+    clearGiftNotifications: '禮物通知',
+    clearGiftRejected: '拒絕記錄',
+    clearNow: '立即清空'
   },
   missionReports: {
     transportSuccess: '運輸任務成功完成',
@@ -789,6 +825,7 @@ export default {
     community: '社群',
     github: 'GitHub 儲存庫',
     qqGroup: 'QQ 交流群',
+    privacyPolicy: '隱私協議',
     notifications: '通知設定',
     notificationsDesc: '管理遊戲內的通知提醒',
     notificationTypes: '通知類型',
@@ -870,6 +907,7 @@ export default {
     completeQueuesSuccess: ''
   },
   alerts: {
+    incomingFleets: '{count}支敵方艦隊來襲',
     npcSpyIncoming: 'NPC偵查即將到達',
     npcAttackIncoming: 'NPC艦隊來襲！',
     npcFleetIncoming: 'NPC艦隊接近',
@@ -880,6 +918,30 @@ export default {
     detectionFailed: '偵查未被發現',
     npcSpiedYourPlanet: 'NPC偵查了你的星球',
     npcAttackedYourPlanet: 'NPC攻擊了你的星球'
+  },
+  enemyAlert: {
+    title: '敵方警報',
+    markAllRead: '全部已讀',
+    noAlerts: '暫無警報',
+    fleetSize: '艦隊規模',
+    ships: '艘',
+    viewFleet: '查看艦隊',
+    alertDetails: '警報詳情',
+    targetInfo: '目標資訊',
+    arrivalTime: '到達時間',
+    countdown: '倒數計時',
+    viewMessages: '查看訊息',
+    arrived: '已到達',
+    missionType: {
+      spy: '偵查',
+      attack: '攻擊',
+      unknown: '未知'
+    },
+    warning: {
+      spy: '敵方偵查即將到達！',
+      attack: '敵方攻擊即將到達！',
+      unknown: '敵方艦隊即將到達！'
+    }
   },
   diplomacy: {
     title: '外交',
@@ -913,8 +975,13 @@ export default {
     more: '更多',
     actions: {
       gift: '贈送禮物',
-      viewPlanets: '查看星球'
+      viewPlanets: '查看星球',
+      addNote: '新增備註',
+      editNote: '編輯備註'
     },
+    note: '備註',
+    notePlaceholder: '輸入備註...',
+    noteEmpty: '無備註',
     lastEvent: '最近事件',
     reportDetails: '外交報告詳情',
     eventDescription: '事件描述',
@@ -923,6 +990,15 @@ export default {
     after: '之後',
     statusChange: '關係狀態變化',
     viewDiplomacy: '查看外交頁面',
+    eventType: {
+      gift: '贈送了資源',
+      attack: '發起了攻擊',
+      allyAttacked: '攻擊了盟友',
+      spy: '進行了偵查',
+      stealDebris: '搶奪了殘骸',
+      destroyPlanet: '摧毀了星球',
+      unknown: '未知事件'
+    },
     events: {
       gift: '已贈送禮物',
       attack: '攻擊',
@@ -959,6 +1035,49 @@ export default {
       allyOutraged: '{allyName}對你摧毀盟友{targetName}的{planetName}感到憤怒',
       npcEliminated: 'NPC {npcName}已被徹底消滅',
       npcEliminatedMessage: '你消滅了{npcName}的所有星球！該勢力已被徹底摧毀。'
+    },
+    searchPlaceholder: '搜索NPC名稱...',
+    viewMode: {
+      card: '卡片',
+      list: '列表'
+    },
+    diagnostic: {
+      button: 'NPC狀態診斷',
+      title: 'NPC狀態診斷',
+      description: '當前玩家積分：{points}，偵查間隔：{spyInterval}分鐘，攻擊間隔：{attackInterval}分鐘，攻擊概率：{attackProb}%',
+      noData: '暫無NPC數據',
+      difficulty: '難度',
+      difficultyLevels: {
+        easy: '簡單',
+        medium: '普通',
+        hard: '困難'
+      },
+      reputation: '好感度',
+      spyProbes: '偵察機數量',
+      fleetPower: '艦隊戰力',
+      canSpy: '可以偵查',
+      canAttack: '可以攻擊',
+      attackProbability: '攻擊概率',
+      nextSpy: '下次偵查',
+      nextAttack: '下次攻擊',
+      yes: '是',
+      no: '否',
+      timeFormat: '{min}分{sec}秒',
+      anytime: '隨時可能',
+      statusExplanation: '狀態說明',
+      noRelation: '無關係',
+      noRelationNeutral: '無關係（中立）',
+      reasons: {
+        friendlyNoAction: '關係友好，不會主動行動',
+        neutralNoAction: '關係中立，不會主動行動',
+        hostileWillAct: '關係敵對，可能採取行動',
+        noRelationNeutral: '無外交關係，視為中立',
+        insufficientProbes: '偵察機不足（當前：{current}，需要：{required}）',
+        noFleet: '沒有戰鬥艦隊',
+        spyCooldown: '偵查冷卻中（{min}分{sec}秒）',
+        attackCooldown: '攻擊冷卻中（{min}分{sec}秒）',
+        notSpiedYet: '尚未偵查過，需要先進行偵查'
+      }
     }
   },
   pagination: {
@@ -973,6 +1092,52 @@ export default {
     title: '找不到頁面',
     description: '抱歉，您訪問的頁面不存在',
     goHome: '返回首頁'
+  },
+  privacy: {
+    title: '隱私協議',
+    sections: {
+      introduction: {
+        title: '簡介',
+        content: '本隱私協議說明了 OGame-Vue-Ts 如何處理您的資料。我們致力於保護您的隱私，本遊戲的設計完全尊重用戶隱私。'
+      },
+      dataCollection: {
+        title: '資料收集',
+        content: '本遊戲僅在您的本地瀏覽器中收集和存儲以下資料：',
+        items: {
+          gameProgress: '遊戲進度（建築等級、艦隊、資源等）',
+          settings: '遊戲設定（通知偏好、顯示選項等）',
+          language: '語言偏好'
+        }
+      },
+      dataStorage: {
+        title: '資料存儲',
+        content:
+          '所有資料均存儲在您瀏覽器的本地存儲（localStorage）中。這意味著您的資料始終保留在您自己的設備上，我們無法訪問、查看或收集任何您的遊戲資料。'
+      },
+      noServer: {
+        title: '無伺服器通訊',
+        content:
+          '本遊戲是一個完全離線的單機遊戲。除了檢查更新功能（從 GitHub 獲取版本資訊）外，遊戲不會與任何伺服器通訊。您的遊戲資料永遠不會離開您的設備。'
+      },
+      thirdParty: {
+        title: '第三方服務',
+        content:
+          '本遊戲使用第三方流量分析服務來統計訪問量和流量來源，幫助我們了解用戶使用情況並改進遊戲體驗。這些分析資料是匿名的，不包含任何個人身份資訊。我們不使用任何廣告服務或其他商業追蹤工具。'
+      },
+      dataControl: {
+        title: '資料控制',
+        content: '您對自己的資料擁有完全控制權：',
+        items: {
+          export: '您可以隨時匯出遊戲資料',
+          import: '您可以從備份檔案匯入資料',
+          delete: '您可以通過清除瀏覽器資料或使用遊戲內的「清除資料」功能來刪除所有資料'
+        }
+      },
+      contact: {
+        title: '聯繫我們',
+        content: '如果您對本隱私協議有任何問題，請通過以下方式聯繫我們：'
+      }
+    }
   },
   time: {
     days: '天',
@@ -1003,6 +1168,67 @@ export default {
         title: '建造佇列',
         content: '點擊右上角的佇列圖示可以查看建造進度。您可以繼續瀏覽其他頁面，建造會在背景進行。'
       }
+    }
+  },
+  hints: {
+    close: '關閉',
+    gotIt: '知道了',
+    dontShowAgain: '不再顯示',
+    resetHints: '重置提示',
+    resetHintsDesc: '重新顯示所有提示',
+    hintsEnabled: '啟用提示',
+    hintsEnabledDesc: '訪問頁面時顯示幫助提示',
+    overview: {
+      title: '星球總覽',
+      message: '在這裡查看星球資源、艦隊狀態和生產詳情。經常查看以監控進度！'
+    },
+    buildings: {
+      title: '建築',
+      message: '在這裡建造和升級建築。先建太陽能電站獲取能量，然後是資源礦。提示：機器人工廠可加速建造！'
+    },
+    research: {
+      title: '研究實驗室',
+      message: '研究科技以解鎖新艦船、提升戰鬥力和推進文明。能量科技是個好起點！'
+    },
+    shipyard: {
+      title: '船塢',
+      message: '建造艦船來探索、運輸資源和保衛帝國。貨船可以在星球之間運送資源。'
+    },
+    fleet: {
+      title: '艦隊指揮',
+      message: '派遣艦船執行任務：攻擊敵人、運輸資源、殖民新星球或探索廢墟場。'
+    },
+    galaxy: {
+      title: '星系地圖',
+      message: '探索星系尋找可殖民的空星球、可回收的廢墟場和可攻擊的敵人。先用間諜探測器偵查！'
+    },
+    diplomacy: {
+      title: '外交',
+      message: '管理與NPC的關係。送禮可提升聲望，否則可能遭受敵對攻擊。敵人的盟友也可能對你敵對！'
+    },
+    messages: {
+      title: '訊息',
+      message: '在這裡查看戰鬥報告、間諜報告和外交通知。追蹤你的活動和敵人遭遇。'
+    },
+    defense: {
+      title: '星球防禦',
+      message: '建造防禦設施保護星球免受攻擊。護盾和砲塔可以威懾襲擊者！'
+    },
+    officers: {
+      title: '軍官',
+      message: '招募軍官獲得各種加成！指揮官加速建造，地質學家提升資源產量，上將增強艦隊能力。'
+    },
+    simulator: {
+      title: '戰鬥模擬器',
+      message: '在發動攻擊前模擬戰鬥結果。輸入雙方艦隊和科技等級，預測勝負和損失。'
+    },
+    settings: {
+      title: '設置',
+      message: '在這裡管理遊戲數據、調整通知設置、導出/導入存檔。記得定期備份你的進度！'
+    },
+    gm: {
+      title: 'GM管理面板',
+      message: 'GM模式可以快速修改資源、建築、科技等級。用於測試或體驗完整遊戲內容。'
     }
   }
 }

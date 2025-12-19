@@ -28,7 +28,6 @@ export const initializePlayer = (playerId: string, playerName: string = 'Command
     incomingFleetAlerts: [],
     giftNotifications: [],
     giftRejectedNotifications: [],
-    diplomaticRelations: {},
     diplomaticReports: [],
     points: 0
   }

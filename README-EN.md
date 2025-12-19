@@ -213,13 +213,6 @@ The application supports full theme customization through Tailwind CSS variables
 
 Contributions are welcome! Please feel free to submit issues or pull requests.
 
-### Issue Templates
-We provide the following issue templates in both Chinese and English:
-- Bug Report
-- Feature Request
-- Documentation Improvement
-- eedback & Suggestion
-
 ## License
 
 This work is licensed under the [Creative Commons Attribution-NonCommercial 4.0 International License](https://creativecommons.org/licenses/by-nc/4.0/).

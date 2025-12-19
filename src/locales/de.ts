@@ -1,4 +1,13 @@
 export default {
+  home: {
+    subtitle: 'Erobere die Sterne',
+    startGame: 'Spiel starten',
+    privacyAgreement: 'Datenschutzvereinbarung',
+    privacyAgreementDesc: 'Bitte lesen und akzeptieren Sie unsere Datenschutzrichtlinie, bevor Sie das Spiel starten.',
+    agreeToPrivacy: 'Ich habe gelesen und stimme zu',
+    viewFullPolicy: 'Vollständige Richtlinie anzeigen',
+    agreeAndStart: 'Zustimmen & Starten'
+  },
   common: {
     confirm: 'Bestätigen',
     cancel: 'Abbrechen',
@@ -36,7 +45,8 @@ export default {
     requirementsNotMet: 'Anforderungen nicht erfüllt',
     current: 'Aktuell',
     level: 'Stufe',
-    gmModeActivated: 'GM-Modus aktiviert! Überprüfen Sie das Navigationsmenü.'
+    gmModeActivated: 'GM-Modus aktiviert! Überprüfen Sie das Navigationsmenü.',
+    view: 'Anzeigen'
   },
   errors: {
     requirementsNotMet: 'Anforderungen nicht erfüllt',
@@ -113,7 +123,13 @@ export default {
     homePlanet: 'Heimatplanet',
     planetPrefix: 'Planet',
     moonSuffix: 's Mond',
-    colonyPrefix: 'Kolonie'
+    colonyPrefix: 'Kolonie',
+    renamePlanet: 'Planet umbenennen',
+    renamePlanetTitle: 'Planet umbenennen',
+    newPlanetName: 'Neuer Name',
+    planetNamePlaceholder: 'Neuen Planetennamen eingeben',
+    rename: 'Umbenennen',
+    renameSuccess: 'Planet wurde in {name} umbenannt'
   },
   player: {
     points: 'Gesamtpunkte'
@@ -284,7 +300,8 @@ export default {
     hyperspaceTechnology: 'Hyperraumsprung-Technologie',
     plasmaTechnology: 'Plasmawaffentechnologie',
     computerTechnology: 'Erhöht Forschungswarteschlange und Flottenmissionsslots, +1 Warteschlange +1 Slot pro Stufe (max 10 Stufen)',
-    espionageTechnology: 'Verbessert Sondenwirksamkeit, +1 Spionagestufe pro Stufe. Spionagestufe = eigene Stufe - Gegnerstufe + Sonden/5. ≥-1 zeigt Flotte, ≥1 zeigt Verteidigung, ≥3 zeigt Gebäude, ≥5 zeigt Technologien',
+    espionageTechnology:
+      'Verbessert Sondenwirksamkeit, +1 Spionagestufe pro Stufe. Spionagestufe = eigene Stufe - Gegnerstufe + Sonden/5. ≥-1 zeigt Flotte, ≥1 zeigt Verteidigung, ≥3 zeigt Gebäude, ≥5 zeigt Technologien',
     weaponsTechnology: 'Erhöht Angriffskraft von Schiffen und Verteidigung um 10% pro Stufe',
     shieldingTechnology: 'Erhöht Schilde von Schiffen und Verteidigung um 10% pro Stufe',
     armourTechnology: 'Erhöht Panzerung von Schiffen und Verteidigung um 10% pro Stufe',
@@ -317,8 +334,8 @@ export default {
     darkMatterSpecialist: 'Verbessert Dunkle-Materie-Sammlungseffizienz'
   },
   queue: {
-    title: 'Bauauftrag',
-    empty: 'Keine aktiven Aufgaben',
+    title: 'Aktive Aufgaben',
+    empty: 'Keine aktiven Warteschlangen',
     buildQueue: 'Bauauftrag',
     researchQueue: 'Forschungsauftrag',
     building: 'Im Bau',
@@ -331,7 +348,14 @@ export default {
     confirmCancel: 'Möchten Sie wirklich abbrechen? 50% der Ressourcen werden zurückerstattet.',
     level: 'Stufe',
     gmModeActivated: '',
-    upgradeToLevel: 'Auf Stufe aufrüsten'
+    upgradeToLevel: 'Auf Stufe aufrüsten',
+    tabs: {
+      all: 'Alle',
+      buildings: 'Gebäude',
+      research: 'Forschung',
+      ships: 'Schiffe',
+      defense: 'Verteidigung'
+    }
   },
   overview: {
     title: 'Planetenübersicht',
@@ -592,7 +616,8 @@ export default {
     debris: 'Trümmer',
     giftPlanetTitle: 'Geschenk senden',
     giftPlanetMessage:
-      'Möchten Sie wirklich Ressourcen als Geschenk an Planet [{coordinates}] senden?\n\nBitte gehen Sie zur Flottenseite, um Transporter auszuwählen und Ressourcen zu laden.'
+      'Möchten Sie wirklich Ressourcen als Geschenk an Planet [{coordinates}] senden?\n\nBitte gehen Sie zur Flottenseite, um Transporter auszuwählen und Ressourcen zu laden.',
+    npcPlanetName: '{name}s Planet'
   },
   messagesView: {
     title: 'Nachrichten',
@@ -631,6 +656,7 @@ export default {
     targetPlanet: 'Zielplanet',
     attackerRemaining: 'Angreifer verblieben',
     defenderRemaining: 'Verteidiger verblieben',
+    allDestroyed: 'Alle zerstört',
     moonChance: 'Mondchance',
     showRoundDetails: 'Rundendetails anzeigen',
     hideRoundDetails: 'Rundendetails ausblenden',
@@ -691,7 +717,17 @@ export default {
     activityDescription: '',
     npcActivityMessage: '',
     arrivalTime: '',
-    npcActivityTip: ''
+    npcActivityTip: '',
+    clearMessages: 'Nachrichten löschen',
+    clearMessageTypes: 'Nachrichtentypen zum Löschen auswählen',
+    clearBattleReports: 'Kampfberichte',
+    clearSpyReports: 'Spionageberichte',
+    clearSpiedNotifications: 'Spionagebenachrichtigungen',
+    clearMissionReports: 'Missionsberichte',
+    clearNPCActivity: 'NPC-Aktivität',
+    clearGiftNotifications: 'Geschenkbenachrichtigungen',
+    clearGiftRejected: 'Abgelehnte Geschenke',
+    clearNow: 'Jetzt löschen'
   },
   missionReports: {
     transportSuccess: 'Transportmission erfolgreich abgeschlossen',
@@ -796,6 +832,7 @@ export default {
     community: 'Community',
     github: 'GitHub-Repository',
     qqGroup: 'QQ-Gruppe',
+    privacyPolicy: 'Datenschutzrichtlinie',
     notifications: 'Benachrichtigungseinstellungen',
     notificationsDesc: 'Verwalten Sie Benachrichtigungen im Spiel',
     notificationTypes: 'Benachrichtigungstypen',
@@ -878,6 +915,7 @@ export default {
     completeQueuesSuccess: ''
   },
   alerts: {
+    incomingFleets: '{count} feindliche Flotten im Anmarsch',
     npcSpyIncoming: 'NPC-Spionagesonde nähert sich',
     npcAttackIncoming: 'NPC-Flotten-Angriff im Anmarsch!',
     npcFleetIncoming: 'NPC-Flotte nähert sich',
@@ -888,6 +926,30 @@ export default {
     detectionFailed: 'Spionage nicht entdeckt',
     npcSpiedYourPlanet: 'NPC hat deinen Planeten ausspioniert',
     npcAttackedYourPlanet: 'NPC hat deinen Planeten angegriffen'
+  },
+  enemyAlert: {
+    title: 'Feindalarm',
+    markAllRead: 'Alle gelesen',
+    noAlerts: 'Keine Alarme',
+    fleetSize: 'Flottengröße',
+    ships: 'Schiffe',
+    viewFleet: 'Flotte anzeigen',
+    alertDetails: 'Alarmdetails',
+    targetInfo: 'Zielinfo',
+    arrivalTime: 'Ankunftszeit',
+    countdown: 'Countdown',
+    viewMessages: 'Nachrichten anzeigen',
+    arrived: 'Angekommen',
+    missionType: {
+      spy: 'Spionage',
+      attack: 'Angriff',
+      unknown: 'Unbekannt'
+    },
+    warning: {
+      spy: 'Feindliche Spionage im Anmarsch!',
+      attack: 'Feindlicher Angriff im Anmarsch!',
+      unknown: 'Feindliche Flotte im Anmarsch!'
+    }
   },
   diplomacy: {
     title: 'Diplomatie',
@@ -921,16 +983,30 @@ export default {
     more: 'weitere',
     actions: {
       gift: 'Geschenk senden',
-      viewPlanets: 'Planeten ansehen'
+      viewPlanets: 'Planeten ansehen',
+      addNote: 'Notiz hinzufügen',
+      editNote: 'Notiz bearbeiten'
     },
+    note: 'Notiz',
+    notePlaceholder: 'Notiz eingeben...',
+    noteEmpty: 'Keine Notiz',
     lastEvent: 'Letztes Ereignis',
-    reportDetails: '',
-    eventDescription: '',
-    reputationChange: '',
-    before: '',
-    after: '',
-    statusChange: '',
-    viewDiplomacy: '',
+    reportDetails: 'Diplomatischer Bericht Details',
+    eventDescription: 'Ereignisbeschreibung',
+    reputationChange: 'Ansehensänderung',
+    before: 'Vorher',
+    after: 'Nachher',
+    statusChange: 'Statusänderung',
+    viewDiplomacy: 'Diplomatie-Seite anzeigen',
+    eventType: {
+      gift: 'Ressourcen geschenkt',
+      attack: 'Angriff gestartet',
+      allyAttacked: 'Verbündeten angegriffen',
+      spy: 'Spionage durchgeführt',
+      stealDebris: 'Trümmer gestohlen',
+      destroyPlanet: 'Planet zerstört',
+      unknown: 'Unbekanntes Ereignis'
+    },
     events: {
       gift: 'Geschenk gesendet',
       attack: 'Angriff',
@@ -967,6 +1043,50 @@ export default {
       allyOutraged: '{allyName} ist empört, dass Sie den Planeten {planetName} ihres Verbündeten {targetName} zerstört haben',
       npcEliminated: 'NPC {npcName} wurde vollständig eliminiert',
       npcEliminatedMessage: 'Sie haben alle Planeten von {npcName} zerstört! Diese Fraktion wurde vollständig ausgelöscht.'
+    },
+    searchPlaceholder: 'NPC-Name suchen...',
+    viewMode: {
+      card: 'Karte',
+      list: 'Liste'
+    },
+    diagnostic: {
+      button: 'NPC-Diagnose',
+      title: 'NPC-Statusdiagnose',
+      description:
+        'Spielerpunkte: {points}, Spionageintervall: {spyInterval}Min, Angriffsintervall: {attackInterval}Min, Angriffswahrscheinlichkeit: {attackProb}%',
+      noData: 'Keine NPC-Daten',
+      difficulty: 'Schwierigkeit',
+      difficultyLevels: {
+        easy: 'Einfach',
+        medium: 'Mittel',
+        hard: 'Schwer'
+      },
+      reputation: 'Ansehen',
+      spyProbes: 'Spionagesonden',
+      fleetPower: 'Flottenstärke',
+      canSpy: 'Kann spionieren',
+      canAttack: 'Kann angreifen',
+      attackProbability: 'Angriffswahrscheinlichkeit',
+      nextSpy: 'Nächste Spionage',
+      nextAttack: 'Nächster Angriff',
+      yes: 'Ja',
+      no: 'Nein',
+      timeFormat: '{min}m {sec}s',
+      anytime: 'Jederzeit',
+      statusExplanation: 'Statuserklärung',
+      noRelation: 'Keine Beziehung',
+      noRelationNeutral: 'Keine Beziehung (Neutral)',
+      reasons: {
+        friendlyNoAction: 'Freundliche Beziehung, wird nicht handeln',
+        neutralNoAction: 'Neutrale Beziehung, wird nicht handeln',
+        hostileWillAct: 'Feindliche Beziehung, kann handeln',
+        noRelationNeutral: 'Keine diplomatische Beziehung, als neutral behandelt',
+        insufficientProbes: 'Unzureichende Sonden (Aktuell: {current}, Benötigt: {required})',
+        noFleet: 'Keine Kampfflotte',
+        spyCooldown: 'Spionage auf Abklingzeit ({min}m {sec}s)',
+        attackCooldown: 'Angriff auf Abklingzeit ({min}m {sec}s)',
+        notSpiedYet: 'Noch nicht spioniert, zuerst Spionage nötig'
+      }
     }
   },
   pagination: {
@@ -981,6 +1101,53 @@ export default {
     title: 'Seite nicht gefunden',
     description: 'Entschuldigung, die gesuchte Seite existiert nicht',
     goHome: 'Zur Startseite'
+  },
+  privacy: {
+    title: 'Datenschutzrichtlinie',
+    sections: {
+      introduction: {
+        title: 'Einführung',
+        content:
+          'Diese Datenschutzrichtlinie erklärt, wie OGame-Vue-Ts Ihre Daten behandelt. Wir sind dem Schutz Ihrer Privatsphäre verpflichtet, und dieses Spiel wurde mit vollständigem Respekt für die Privatsphäre der Benutzer entwickelt.'
+      },
+      dataCollection: {
+        title: 'Datenerfassung',
+        content: 'Dieses Spiel erfasst und speichert nur die folgenden Daten lokal in Ihrem Browser:',
+        items: {
+          gameProgress: 'Spielfortschritt (Gebäudestufen, Flotten, Ressourcen usw.)',
+          settings: 'Spieleinstellungen (Benachrichtigungseinstellungen, Anzeigeoptionen usw.)',
+          language: 'Sprachpräferenz'
+        }
+      },
+      dataStorage: {
+        title: 'Datenspeicherung',
+        content:
+          'Alle Daten werden im lokalen Speicher (localStorage) Ihres Browsers gespeichert. Dies bedeutet, dass Ihre Daten immer auf Ihrem eigenen Gerät verbleiben und wir keinen Zugriff auf Ihre Spieldaten haben, diese nicht einsehen oder erfassen können.'
+      },
+      noServer: {
+        title: 'Keine Serverkommunikation',
+        content:
+          'Dieses Spiel ist ein vollständig offline funktionierendes Einzelspielerspiel. Abgesehen von der Update-Prüfungsfunktion (die Versionsinformationen von GitHub abruft) kommuniziert das Spiel mit keinem Server. Ihre Spieldaten verlassen niemals Ihr Gerät.'
+      },
+      thirdParty: {
+        title: 'Drittanbieterdienste',
+        content:
+          'Dieses Spiel verwendet Analyse-Dienste von Drittanbietern, um Besucherstatistiken und Traffic-Quellen zu erfassen. Dies hilft uns, Nutzungsmuster zu verstehen und das Spielerlebnis zu verbessern. Diese Analysedaten sind anonym und enthalten keine persönlich identifizierbaren Informationen. Wir verwenden keine Werbedienste oder andere kommerzielle Tracking-Tools.'
+      },
+      dataControl: {
+        title: 'Datenkontrolle',
+        content: 'Sie haben die vollständige Kontrolle über Ihre Daten:',
+        items: {
+          export: 'Sie können Ihre Spieldaten jederzeit exportieren',
+          import: 'Sie können Daten aus Sicherungsdateien importieren',
+          delete: 'Sie können alle Daten löschen, indem Sie die Browserdaten löschen oder die Funktion "Daten löschen" im Spiel verwenden'
+        }
+      },
+      contact: {
+        title: 'Kontakt',
+        content: 'Wenn Sie Fragen zu dieser Datenschutzrichtlinie haben, kontaktieren Sie uns bitte über:'
+      }
+    }
   },
   time: {
     days: 'Tage',
@@ -1014,6 +1181,79 @@ export default {
         content:
           'Klicken Sie auf das Warteschlangensymbol oben rechts, um den Baufortschritt anzuzeigen. Sie können weiter andere Seiten durchsuchen - der Bau läuft im Hintergrund.'
       }
+    }
+  },
+  hints: {
+    close: 'Schließen',
+    gotIt: 'Verstanden',
+    dontShowAgain: 'Nicht mehr anzeigen',
+    resetHints: 'Hinweise zurücksetzen',
+    resetHintsDesc: 'Alle Hinweise wieder anzeigen',
+    hintsEnabled: 'Hinweise aktivieren',
+    hintsEnabledDesc: 'Hilfreiche Hinweise beim Seitenbesuch anzeigen',
+    overview: {
+      title: 'Planetenübersicht',
+      message:
+        'Hier sehen Sie Planetenressourcen, Flottenstatus und Produktionsdetails. Schauen Sie regelmäßig vorbei, um Ihren Fortschritt zu überwachen!'
+    },
+    buildings: {
+      title: 'Gebäude',
+      message:
+        'Bauen und verbessern Sie Strukturen hier. Beginnen Sie mit dem Solarkraftwerk für Energie, dann Ressourcenminen. Tipp: Roboterfabrik beschleunigt den Bau!'
+    },
+    research: {
+      title: 'Forschungslabor',
+      message:
+        'Erforschen Sie Technologien, um neue Schiffe freizuschalten, Kampfkraft zu verbessern und Ihre Zivilisation voranzubringen. Energietechnik ist ein guter Anfang!'
+    },
+    shipyard: {
+      title: 'Raumschiffswerft',
+      message:
+        'Bauen Sie Schiffe zum Erkunden, Transportieren von Ressourcen und Verteidigen Ihres Imperiums. Frachter helfen beim Transport zwischen Planeten.'
+    },
+    fleet: {
+      title: 'Flottenkommando',
+      message:
+        'Senden Sie Ihre Schiffe auf Missionen: Feinde angreifen, Ressourcen transportieren, neue Planeten besiedeln oder Trümmerfelder erkunden.'
+    },
+    galaxy: {
+      title: 'Galaxiekarte',
+      message:
+        'Erkunden Sie die Galaxie, um leere Planeten zum Besiedeln, Trümmerfelder zum Ernten und Feinde zum Angreifen zu finden. Nutzen Sie zuerst Spionagesonden!'
+    },
+    diplomacy: {
+      title: 'Diplomatie',
+      message:
+        'Verwalten Sie Beziehungen mit NPCs. Senden Sie Geschenke, um den Ruf zu verbessern, oder stellen Sie sich feindlichen Angriffen. Verbündete Ihrer Feinde könnten auch feindlich werden!'
+    },
+    messages: {
+      title: 'Nachrichten',
+      message:
+        'Sehen Sie hier Kampfberichte, Spionageberichte und diplomatische Benachrichtigungen. Verfolgen Sie Ihre Aktivitäten und Feindkontakte.'
+    },
+    defense: {
+      title: 'Planetenverteidigung',
+      message:
+        'Bauen Sie Verteidigungsstrukturen, um Ihren Planeten vor Angriffen zu schützen. Schilde und Geschütze können Angreifer abschrecken!'
+    },
+    officers: {
+      title: 'Offiziere',
+      message:
+        'Rekrutieren Sie Offiziere für verschiedene Boni! Kommandant beschleunigt den Bau, Geologe steigert Ressourcenproduktion, Admiral verbessert Flottenkapazitäten.'
+    },
+    simulator: {
+      title: 'Kampfsimulator',
+      message:
+        'Simulieren Sie Kampfergebnisse vor dem Angriff. Geben Sie Flotten und Technologiestufen ein, um Sieg, Verluste und Beute vorherzusagen.'
+    },
+    settings: {
+      title: 'Einstellungen',
+      message: 'Verwalten Sie hier Spieldaten, Benachrichtigungen und Import/Export. Sichern Sie regelmäßig Ihren Fortschritt!'
+    },
+    gm: {
+      title: 'GM-Panel',
+      message:
+        'Der GM-Modus ermöglicht schnelle Änderung von Ressourcen, Gebäuden und Technologiestufen. Nutzen Sie ihn zum Testen oder für vollständige Spielinhalte.'
     }
   }
 }

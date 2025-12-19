@@ -1,4 +1,13 @@
 export default {
+  home: {
+    subtitle: '별들을 정복하라',
+    startGame: '게임 시작',
+    privacyAgreement: '개인정보 처리방침',
+    privacyAgreementDesc: '게임을 시작하기 전에 개인정보 처리방침을 읽고 동의해 주세요.',
+    agreeToPrivacy: '읽었으며 동의합니다',
+    viewFullPolicy: '전체 정책 보기',
+    agreeAndStart: '동의 후 시작'
+  },
   common: {
     confirm: '확인',
     cancel: '취소',
@@ -36,7 +45,8 @@ export default {
     requirementsNotMet: '요구사항 미충족',
     current: '현재',
     level: '레벨',
-    gmModeActivated: 'GM 모드가 활성화되었습니다! 탐색 메뉴를 확인하세요.'
+    gmModeActivated: 'GM 모드가 활성화되었습니다! 탐색 메뉴를 확인하세요.',
+    view: '보기'
   },
   errors: {
     requirementsNotMet: '전제 조건 미충족',
@@ -113,7 +123,13 @@ export default {
     homePlanet: '모행성',
     planetPrefix: '행성',
     moonSuffix: '의 위성',
-    colonyPrefix: '식민지'
+    colonyPrefix: '식민지',
+    renamePlanet: '행성 이름 변경',
+    renamePlanetTitle: '행성 이름 변경',
+    newPlanetName: '새 이름',
+    planetNamePlaceholder: '새 행성 이름 입력',
+    rename: '이름 변경',
+    renameSuccess: '행성 이름이 {name}(으)로 변경되었습니다'
   },
   player: {
     points: '총 점수'
@@ -284,7 +300,8 @@ export default {
     hyperspaceTechnology: '초공간 점프 기술',
     plasmaTechnology: '플라즈마 무기 기술',
     computerTechnology: '연구 대기열 및 함대 임무 슬롯 증가, 레벨당 +1 대기열 +1 슬롯 (최대 10레벨)',
-    espionageTechnology: '스파이 탐사기 효과 향상, 레벨당 정찰 깊이 +1. 정찰 레벨 = 내 레벨 - 상대 레벨 + 탐사기 수/5. ≥-1 함대 표시, ≥1 방어 표시, ≥3 건물 표시, ≥5 기술 표시',
+    espionageTechnology:
+      '스파이 탐사기 효과 향상, 레벨당 정찰 깊이 +1. 정찰 레벨 = 내 레벨 - 상대 레벨 + 탐사기 수/5. ≥-1 함대 표시, ≥1 방어 표시, ≥3 건물 표시, ≥5 기술 표시',
     weaponsTechnology: '함선과 방어의 공격력 레벨당 10% 증가',
     shieldingTechnology: '함선과 방어의 실드 레벨당 10% 증가',
     armourTechnology: '함선과 방어의 장갑 레벨당 10% 증가',
@@ -317,8 +334,8 @@ export default {
     darkMatterSpecialist: '암흑 물질 수집 효율 향상'
   },
   queue: {
-    title: '건설 대기열',
-    empty: '활성 작업 없음',
+    title: '진행 중인 작업',
+    empty: '활성 대기열 없음',
     buildQueue: '건설 대기열',
     researchQueue: '연구 대기열',
     building: '건설 중',
@@ -331,7 +348,14 @@ export default {
     confirmCancel: '취소하시겠습니까? 자원의 50%가 환불됩니다.',
     level: '레벨',
     gmModeActivated: '',
-    upgradeToLevel: '레벨로 업그레이드'
+    upgradeToLevel: '레벨로 업그레이드',
+    tabs: {
+      all: '전체',
+      buildings: '건물',
+      research: '연구',
+      ships: '함선',
+      defense: '방어'
+    }
   },
   overview: {
     title: '행성 개요',
@@ -586,7 +610,9 @@ export default {
     sendGift: '선물 보내기',
     debris: '잔해',
     giftPlanetTitle: '선물 보내기',
-    giftPlanetMessage: '행성 [{coordinates}]에 자원을 선물로 보내시겠습니까?\n\n함대 페이지로 이동하여 수송선을 선택하고 자원을 적재하세요.'
+    giftPlanetMessage:
+      '행성 [{coordinates}]에 자원을 선물로 보내시겠습니까?\n\n함대 페이지로 이동하여 수송선을 선택하고 자원을 적재하세요.',
+    npcPlanetName: '{name}의 행성'
   },
   messagesView: {
     title: '메시지 센터',
@@ -620,6 +646,7 @@ export default {
     targetPlanet: '목표 행성',
     attackerRemaining: '공격자 잔여',
     defenderRemaining: '방어자 잔여',
+    allDestroyed: '모두 파괴됨',
     moonChance: '위성 생성 확률',
     showRoundDetails: '라운드 상세 표시',
     hideRoundDetails: '라운드 상세 숨기기',
@@ -685,7 +712,17 @@ export default {
     activityDescription: '',
     npcActivityMessage: '',
     arrivalTime: '',
-    npcActivityTip: ''
+    npcActivityTip: '',
+    clearMessages: '메시지 삭제',
+    clearMessageTypes: '삭제할 메시지 유형 선택',
+    clearBattleReports: '전투 보고서',
+    clearSpyReports: '정찰 보고서',
+    clearSpiedNotifications: '정찰 알림',
+    clearMissionReports: '임무 보고서',
+    clearNPCActivity: 'NPC 활동',
+    clearGiftNotifications: '선물 알림',
+    clearGiftRejected: '거절된 선물',
+    clearNow: '지금 삭제'
   },
   missionReports: {
     transportSuccess: '수송 임무가 성공적으로 완료되었습니다',
@@ -788,6 +825,7 @@ export default {
     community: '커뮤니티',
     github: 'GitHub 저장소',
     qqGroup: 'QQ 그룹',
+    privacyPolicy: '개인정보처리방침',
     notifications: '알림 설정',
     notificationsDesc: '게임 내 알림 관리',
     notificationTypes: '알림 유형',
@@ -869,6 +907,7 @@ export default {
     completeQueuesSuccess: ''
   },
   alerts: {
+    incomingFleets: '{count}개의 적 함대 접근 중',
     npcSpyIncoming: 'NPC 정찰 프로브 접근 중',
     npcAttackIncoming: 'NPC 함대 공격 진행 중!',
     npcFleetIncoming: 'NPC 함대 접근 중',
@@ -879,6 +918,30 @@ export default {
     detectionFailed: '정찰 미발견',
     npcSpiedYourPlanet: 'NPC가 당신의 행성을 정찰했습니다',
     npcAttackedYourPlanet: 'NPC가 당신의 행성을 공격했습니다'
+  },
+  enemyAlert: {
+    title: '적 경보',
+    markAllRead: '모두 읽음',
+    noAlerts: '경보 없음',
+    fleetSize: '함대 규모',
+    ships: '척',
+    viewFleet: '함대 보기',
+    alertDetails: '경보 상세',
+    targetInfo: '목표 정보',
+    arrivalTime: '도착 시간',
+    countdown: '카운트다운',
+    viewMessages: '메시지 보기',
+    arrived: '도착함',
+    missionType: {
+      spy: '정찰',
+      attack: '공격',
+      unknown: '알 수 없음'
+    },
+    warning: {
+      spy: '적 정찰 접근 중!',
+      attack: '적 공격 접근 중!',
+      unknown: '적 함대 접근 중!'
+    }
   },
   diplomacy: {
     title: '외교',
@@ -912,16 +975,30 @@ export default {
     more: '더보기',
     actions: {
       gift: '선물 보내기',
-      viewPlanets: '행성 보기'
+      viewPlanets: '행성 보기',
+      addNote: '메모 추가',
+      editNote: '메모 편집'
     },
+    note: '메모',
+    notePlaceholder: '메모 입력...',
+    noteEmpty: '메모 없음',
     lastEvent: '최근 이벤트',
-    reportDetails: '',
-    eventDescription: '',
-    reputationChange: '',
-    before: '',
-    after: '',
-    statusChange: '',
-    viewDiplomacy: '',
+    reportDetails: '외교 보고서 상세',
+    eventDescription: '이벤트 설명',
+    reputationChange: '평판 변화',
+    before: '이전',
+    after: '이후',
+    statusChange: '관계 상태 변화',
+    viewDiplomacy: '외교 페이지 보기',
+    eventType: {
+      gift: '자원을 선물함',
+      attack: '공격을 시작함',
+      allyAttacked: '동맹을 공격함',
+      spy: '정찰을 수행함',
+      stealDebris: '잔해를 약탈함',
+      destroyPlanet: '행성을 파괴함',
+      unknown: '알 수 없는 이벤트'
+    },
     events: {
       gift: '선물 전송',
       attack: '공격',
@@ -958,6 +1035,49 @@ export default {
       allyOutraged: '{allyName}은(는) 당신이 동맹 {targetName}의 {planetName}을(를) 파괴한 것에 분노하고 있습니다',
       npcEliminated: 'NPC {npcName}이(가) 완전히 제거되었습니다',
       npcEliminatedMessage: '당신은 {npcName}의 모든 행성을 파괴했습니다! 이 세력은 완전히 소멸되었습니다.'
+    },
+    searchPlaceholder: 'NPC 이름 검색...',
+    viewMode: {
+      card: '카드',
+      list: '목록'
+    },
+    diagnostic: {
+      button: 'NPC 상태 진단',
+      title: 'NPC 상태 진단',
+      description: '플레이어 점수: {points}, 정찰 간격: {spyInterval}분, 공격 간격: {attackInterval}분, 공격 확률: {attackProb}%',
+      noData: 'NPC 데이터 없음',
+      difficulty: '난이도',
+      difficultyLevels: {
+        easy: '쉬움',
+        medium: '보통',
+        hard: '어려움'
+      },
+      reputation: '평판',
+      spyProbes: '정찰기 수',
+      fleetPower: '함대 전력',
+      canSpy: '정찰 가능',
+      canAttack: '공격 가능',
+      attackProbability: '공격 확률',
+      nextSpy: '다음 정찰',
+      nextAttack: '다음 공격',
+      yes: '예',
+      no: '아니오',
+      timeFormat: '{min}분 {sec}초',
+      anytime: '언제든지',
+      statusExplanation: '상태 설명',
+      noRelation: '관계 없음',
+      noRelationNeutral: '관계 없음 (중립)',
+      reasons: {
+        friendlyNoAction: '우호적 관계, 행동하지 않음',
+        neutralNoAction: '중립적 관계, 행동하지 않음',
+        hostileWillAct: '적대적 관계, 행동할 수 있음',
+        noRelationNeutral: '외교 관계 없음, 중립으로 취급',
+        insufficientProbes: '정찰기 부족 (현재: {current}, 필요: {required})',
+        noFleet: '전투 함대 없음',
+        spyCooldown: '정찰 쿨다운 중 ({min}분 {sec}초)',
+        attackCooldown: '공격 쿨다운 중 ({min}분 {sec}초)',
+        notSpiedYet: '아직 정찰하지 않음, 먼저 정찰 필요'
+      }
     }
   },
   pagination: {
@@ -972,6 +1092,53 @@ export default {
     title: '페이지를 찾을 수 없습니다',
     description: '죄송합니다. 찾으시는 페이지가 존재하지 않습니다',
     goHome: '홈으로 이동'
+  },
+  privacy: {
+    title: '개인정보처리방침',
+    sections: {
+      introduction: {
+        title: '소개',
+        content:
+          '이 개인정보처리방침은 OGame-Vue-Ts가 귀하의 데이터를 어떻게 처리하는지 설명합니다. 우리는 귀하의 개인정보 보호에 전념하며, 이 게임은 사용자 개인정보를 완전히 존중하도록 설계되었습니다.'
+      },
+      dataCollection: {
+        title: '데이터 수집',
+        content: '이 게임은 다음 데이터만 브라우저에 로컬로 수집하고 저장합니다:',
+        items: {
+          gameProgress: '게임 진행 상황 (건물 레벨, 함대, 자원 등)',
+          settings: '게임 설정 (알림 설정, 표시 옵션 등)',
+          language: '언어 설정'
+        }
+      },
+      dataStorage: {
+        title: '데이터 저장',
+        content:
+          '모든 데이터는 브라우저의 로컬 스토리지(localStorage)에 저장됩니다. 이는 귀하의 데이터가 항상 귀하의 장치에 남아 있으며, 우리는 귀하의 게임 데이터에 접근, 조회 또는 수집할 수 없음을 의미합니다.'
+      },
+      noServer: {
+        title: '서버 통신 없음',
+        content:
+          '이 게임은 완전히 오프라인인 싱글 플레이어 게임입니다. 업데이트 확인 기능(GitHub에서 버전 정보를 가져옴)을 제외하고 게임은 어떤 서버와도 통신하지 않습니다. 귀하의 게임 데이터는 절대로 장치를 떠나지 않습니다.'
+      },
+      thirdParty: {
+        title: '제3자 서비스',
+        content:
+          '이 게임은 방문자 통계 및 트래픽 소스를 추적하기 위해 제3자 분석 서비스를 사용합니다. 이를 통해 사용 패턴을 이해하고 게임 경험을 개선할 수 있습니다. 이 분석 데이터는 익명이며 개인 식별 정보를 포함하지 않습니다. 광고 서비스나 기타 상업적 추적 도구는 사용하지 않습니다.'
+      },
+      dataControl: {
+        title: '데이터 제어',
+        content: '귀하는 데이터를 완전히 제어할 수 있습니다:',
+        items: {
+          export: '언제든지 게임 데이터를 내보낼 수 있습니다',
+          import: '백업 파일에서 데이터를 가져올 수 있습니다',
+          delete: '브라우저 데이터를 지우거나 게임 내 "데이터 삭제" 기능을 사용하여 모든 데이터를 삭제할 수 있습니다'
+        }
+      },
+      contact: {
+        title: '문의하기',
+        content: '이 개인정보처리방침에 대한 질문이 있으시면 다음을 통해 문의해 주세요:'
+      }
+    }
   },
   time: {
     days: '일',
@@ -1005,6 +1172,68 @@ export default {
         content:
           '오른쪽 상단의 대기열 아이콘을 클릭하여 건설 진행 상황을 확인하세요. 다른 페이지를 계속 탐색할 수 있으며, 건설은 백그라운드에서 진행됩니다.'
       }
+    }
+  },
+  hints: {
+    close: '닫기',
+    gotIt: '알겠습니다',
+    dontShowAgain: '다시 표시 안 함',
+    resetHints: '힌트 재설정',
+    resetHintsDesc: '모든 힌트 다시 표시',
+    hintsEnabled: '힌트 활성화',
+    hintsEnabledDesc: '페이지 방문 시 도움말 힌트 표시',
+    overview: {
+      title: '행성 개요',
+      message: '여기서 행성 자원, 함대 상태, 생산 세부 정보를 확인할 수 있습니다. 진행 상황을 모니터링하려면 자주 확인하세요!'
+    },
+    buildings: {
+      title: '건물',
+      message:
+        '여기서 구조물을 건설하고 업그레이드합니다. 태양광 발전소로 에너지를 확보한 다음 자원 광산을 건설하세요. 팁: 로봇 공장이 건설 속도를 높입니다!'
+    },
+    research: {
+      title: '연구소',
+      message: '기술을 연구하여 새로운 함선을 해제하고, 전투력을 향상시키고, 문명을 발전시키세요. 에너지 기술이 좋은 시작점입니다!'
+    },
+    shipyard: {
+      title: '조선소',
+      message: '함선을 건조하여 탐험, 자원 운송, 제국 방어에 활용하세요. 화물선은 행성 간 자원을 운반합니다.'
+    },
+    fleet: {
+      title: '함대 사령부',
+      message: '함선을 임무에 파견하세요: 적 공격, 자원 수송, 새 행성 식민지화, 또는 잔해장 탐색.'
+    },
+    galaxy: {
+      title: '은하 지도',
+      message: '은하를 탐색하여 식민지화할 빈 행성, 수확할 잔해장, 공격할 적을 찾으세요. 먼저 정찰 탐침을 사용하세요!'
+    },
+    diplomacy: {
+      title: '외교',
+      message: 'NPC와의 관계를 관리하세요. 선물을 보내 평판을 높이거나 적대적 공격에 직면하세요. 적의 동맹도 적대적으로 변할 수 있습니다!'
+    },
+    messages: {
+      title: '메시지',
+      message: '여기서 전투 보고서, 정찰 보고서, 외교 알림을 확인하세요. 활동과 적 조우를 추적하세요.'
+    },
+    defense: {
+      title: '행성 방어',
+      message: '방어 구조물을 건설하여 공격으로부터 행성을 보호하세요. 방패와 포탑이 침입자를 억제합니다!'
+    },
+    officers: {
+      title: '장교',
+      message: '장교를 고용하여 다양한 보너스를 획득하세요! 사령관은 건설 가속, 지질학자는 자원 생산 증가, 제독은 함대 능력 강화.'
+    },
+    simulator: {
+      title: '전투 시뮬레이터',
+      message: '공격 전에 전투 결과를 시뮬레이션하세요. 양측 함대와 기술 레벨을 입력하여 승패와 손실을 예측.'
+    },
+    settings: {
+      title: '설정',
+      message: '여기서 게임 데이터 관리, 알림 설정, 저장 내보내기/가져오기가 가능합니다. 정기적으로 백업하세요!'
+    },
+    gm: {
+      title: 'GM 관리 패널',
+      message: 'GM 모드에서는 자원, 건물, 기술 레벨을 빠르게 수정할 수 있습니다. 테스트나 전체 게임 콘텐츠 체험에 사용.'
     }
   }
 }

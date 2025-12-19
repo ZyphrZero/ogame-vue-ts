@@ -205,16 +205,30 @@
                   <div v-if="slot.planet" class="space-y-1">
                     <!-- 第一行：名称、坐标、状态、残骸 -->
                     <div class="flex items-center gap-1.5 min-w-0 flex-wrap">
-                      <h3 class="font-semibold text-sm truncate">{{ slot.planet.name }}</h3>
+                      <h3 class="font-semibold text-sm truncate">
+                        {{ isMyPlanet(slot.planet) ? slot.planet.name : getNpcPlanetDisplayName(slot.planet) }}
+                      </h3>
                       <span class="text-xs text-muted-foreground whitespace-nowrap flex-shrink-0">
                         [{{ slot.planet.position.galaxy }}:{{ slot.planet.position.system }}:{{ slot.planet.position.position }}]
                       </span>
                       <Badge v-if="isMyPlanet(slot.planet)" variant="default" class="text-xs flex-shrink-0">
                         {{ t('galaxyView.mine') }}
                       </Badge>
-                      <Badge v-else :variant="getRelationBadgeVariant(slot.planet)" class="text-xs flex-shrink-0">
-                        {{ getRelationStatusText(slot.planet) }}
-                      </Badge>
+                      <Popover v-else>
+                        <PopoverTrigger as-child>
+                          <Badge :variant="getRelationBadgeVariant(slot.planet)" class="text-xs flex-shrink-0 cursor-pointer">
+                            {{ getRelationStatusText(slot.planet) }}
+                          </Badge>
+                        </PopoverTrigger>
+                        <PopoverContent v-if="getReputationValue(slot.planet) !== null" class="w-auto p-3" side="top" align="center">
+                          <p class="text-sm">
+                            {{ t('diplomacy.reputation') }}:
+                            <span :class="getReputationColor(getReputationValue(slot.planet))" class="font-medium">
+                              {{ getReputationValue(slot.planet)! > 0 ? '+' : '' }}{{ getReputationValue(slot.planet) }}
+                            </span>
+                          </p>
+                        </PopoverContent>
+                      </Popover>
                       <Popover v-if="getDebrisFieldAt(currentGalaxy, currentSystem, slot.position)">
                         <PopoverTrigger as-child>
                           <Badge
@@ -224,7 +238,7 @@
                             <Recycle class="h-3 w-3" />
                           </Badge>
                         </PopoverTrigger>
-                        <PopoverContent class="w-auto p-3" side="top" align="start">
+                        <PopoverContent class="w-auto p-3" side="top" align="center">
                           <div class="space-y-2">
                             <p class="text-xs font-semibold text-amber-700 dark:text-amber-400">{{ t('galaxyView.debrisField') }}</p>
                             <div class="space-y-1 text-xs">
@@ -246,13 +260,6 @@
                           </div>
                         </PopoverContent>
                       </Popover>
-                    </div>
-                    <!-- 第二行：好感度 -->
-                    <div v-if="!isMyPlanet(slot.planet) && getReputationValue(slot.planet) !== null" class="text-xs">
-                      <span class="text-muted-foreground">{{ t('diplomacy.reputation') }}:</span>
-                      <span class="ml-1 font-semibold" :class="getReputationColor(getReputationValue(slot.planet))">
-                        {{ getReputationValue(slot.planet)! > 0 ? '+' : '' }}{{ getReputationValue(slot.planet) }}
-                      </span>
                     </div>
                   </div>
                   <!-- 空位置 -->
@@ -389,11 +396,27 @@
                 <div v-if="slot.planet" class="space-y-1">
                   <!-- PC端：标题和徽章 -->
                   <div class="flex items-center gap-2 flex-wrap">
-                    <h3 class="font-semibold text-base">{{ slot.planet.name }}</h3>
+                    <h3 class="font-semibold text-base">
+                      {{ isMyPlanet(slot.planet) ? slot.planet.name : getNpcPlanetDisplayName(slot.planet) }}
+                    </h3>
                     <Badge v-if="isMyPlanet(slot.planet)" variant="default" class="text-xs">{{ t('galaxyView.mine') }}</Badge>
-                    <Badge v-else :variant="getRelationBadgeVariant(slot.planet)" class="text-xs">
-                      {{ getRelationStatusText(slot.planet) }}
-                    </Badge>
+                    <TooltipProvider v-else :delay-duration="300">
+                      <Tooltip>
+                        <TooltipTrigger as-child>
+                          <Badge :variant="getRelationBadgeVariant(slot.planet)" class="text-xs cursor-default">
+                            {{ getRelationStatusText(slot.planet) }}
+                          </Badge>
+                        </TooltipTrigger>
+                        <TooltipContent v-if="getReputationValue(slot.planet) !== null">
+                          <p>
+                            {{ t('diplomacy.reputation') }}:
+                            <span :class="getReputationColor(getReputationValue(slot.planet))">
+                              {{ getReputationValue(slot.planet)! > 0 ? '+' : '' }}{{ getReputationValue(slot.planet) }}
+                            </span>
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                     <!-- 残骸场徽章 -->
                     <Popover v-if="getDebrisFieldAt(currentGalaxy, currentSystem, slot.position)">
                       <PopoverTrigger as-child>
@@ -432,13 +455,6 @@
                   <p class="text-xs text-muted-foreground">
                     [{{ slot.planet.position.galaxy }}:{{ slot.planet.position.system }}:{{ slot.planet.position.position }}]
                   </p>
-                  <!-- PC端：好感度显示（仅NPC星球） -->
-                  <div v-if="!isMyPlanet(slot.planet) && getReputationValue(slot.planet) !== null" class="text-xs">
-                    <span class="text-muted-foreground">{{ t('diplomacy.reputation') }}:</span>
-                    <span class="ml-1 font-semibold" :class="getReputationColor(getReputationValue(slot.planet))">
-                      {{ getReputationValue(slot.planet)! > 0 ? '+' : '' }}{{ getReputationValue(slot.planet) }}
-                    </span>
-                  </div>
                 </div>
                 <!-- 空位置 -->
                 <div v-else class="space-y-1">
@@ -744,9 +760,6 @@
       selectedGalaxy.value = queryGalaxy
       selectedSystem.value = querySystem
       loadSystem()
-
-      // 立即清除URL参数，但保持本地变量中的highlightNpcId
-      clearUrlParams()
     } else if (gameStore.currentPlanet) {
       // 否则默认显示当前星球所在的星系
       currentGalaxy.value = gameStore.currentPlanet.position.galaxy
@@ -776,13 +789,6 @@
   const getDebrisFieldAt = (galaxy: number, system: number, position: number): DebrisField | null => {
     const debrisId = `debris_${galaxy}_${system}_${position}`
     return universeStore.debrisFields[debrisId] || null
-  }
-
-  // 清除URL参数
-  const clearUrlParams = () => {
-    if (route.query.highlightNpc || route.query.galaxy || route.query.system) {
-      router.replace({ query: {} })
-    }
   }
 
   // 加载星系
@@ -833,7 +839,8 @@
   const getRelation = (planet: Planet | null) => {
     const npc = getPlanetNPC(planet)
     if (!npc) return null
-    return gameStore.player.diplomaticRelations?.[npc.id]
+    // 从NPC的relations中获取对玩家的关系
+    return npc.relations?.[gameStore.player.id]
   }
 
   // 获取关系状态Badge样式
@@ -878,6 +885,17 @@
     if (reputation >= 20) return 'text-green-600 dark:text-green-400'
     if (reputation <= -20) return 'text-red-600 dark:text-red-400'
     return 'text-muted-foreground'
+  }
+
+  // 获取NPC星球的显示名称 - 使用"XXX的星球"格式，如果有备注则显示"NPC名称(备注)的星球"
+  const getNpcPlanetDisplayName = (planet: Planet | null): string => {
+    if (!planet) return ''
+    const npc = getPlanetNPC(planet)
+    if (npc) {
+      const displayName = npc.note ? `${npc.name}(${npc.note})` : npc.name
+      return t('galaxyView.npcPlanetName').replace('{name}', displayName)
+    }
+    return planet.name
   }
 
   // 切换到指定星球

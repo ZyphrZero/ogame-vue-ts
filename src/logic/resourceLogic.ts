@@ -67,10 +67,14 @@ export const calculateResourceProduction = (
   // 计算能量产出（每小时）
   const energyProduction = calculateEnergyProduction(planet, { energyProductionBonus: bonuses.energyProductionBonus })
 
-  // 检查当前能量是否充足
-  // 如果当前能量 <= 0，矿场停止生产
-  const hasEnergy = planet.resources.energy > 0
-  const productionEfficiency = hasEnergy ? 1 : 0
+  // 计算能量消耗（每小时）
+  const energyConsumption = calculateEnergyConsumption(planet)
+
+  // 检查能量平衡是否充足
+  // 如果能量产出 >= 能量消耗，矿场正常生产
+  // 这样即使浏览器关闭后再打开，只要能量平衡是正的，就能正常生产
+  const hasPositiveEnergyBalance = energyProduction >= energyConsumption
+  const productionEfficiency = hasPositiveEnergyBalance ? 1 : 0
 
   return {
     metal: metalMineLevel * 1500 * Math.pow(1.5, metalMineLevel) * resourceBonus * productionEfficiency,
@@ -296,8 +300,11 @@ export const calculateProductionBreakdown = (
   const darkMatterCollectorLevel = planet.buildings[BuildingType.DarkMatterCollector] || 0
   const solarPlantLevel = planet.buildings[BuildingType.SolarPlant] || 0
 
-  const hasEnergy = planet.resources.energy > 0
-  const productionEfficiency = hasEnergy ? 1 : 0
+  // 计算能量平衡（基于产出vs消耗，而不是当前能量值）
+  const energyProduction = calculateEnergyProduction(planet, { energyProductionBonus: 0 })
+  const energyConsumption = calculateEnergyConsumption(planet)
+  const hasPositiveEnergyBalance = energyProduction >= energyConsumption
+  const productionEfficiency = hasPositiveEnergyBalance ? 1 : 0
 
   // 收集每个军官的加成信息
   const activeOfficerBonuses: Array<{
@@ -343,7 +350,7 @@ export const calculateProductionBreakdown = (
     }
   })
 
-  if (!hasEnergy) {
+  if (!hasPositiveEnergyBalance) {
     metalBonuses.push({
       name: 'resources.noEnergy',
       percentage: -100,
@@ -370,7 +377,7 @@ export const calculateProductionBreakdown = (
     }
   })
 
-  if (!hasEnergy) {
+  if (!hasPositiveEnergyBalance) {
     crystalBonuses.push({
       name: 'resources.noEnergy',
       percentage: -100,
@@ -397,7 +404,7 @@ export const calculateProductionBreakdown = (
     }
   })
 
-  if (!hasEnergy) {
+  if (!hasPositiveEnergyBalance) {
     deuteriumBonuses.push({
       name: 'resources.noEnergy',
       percentage: -100,

@@ -317,6 +317,23 @@ export const processNPCAttackArrival = async (
       createdAt: Date.now()
     }
   }
+
+  // NPC攻击玩家后降低好感度
+  if (!npc.relations) {
+    npc.relations = {}
+  }
+  if (!npc.relations[defender.id]) {
+    npc.relations[defender.id] = diplomaticLogic.initializeDiplomaticRelation(npc.id, defender.id)
+  }
+
+  // 根据战斗结果降低好感度
+  // NPC获胜降低更多好感度，失败降低较少
+  const reputationChange = battleResult.winner === 'attacker' ? -15 : -10
+  const relation = npc.relations[defender.id]
+  if (relation) {
+    diplomaticLogic.updateReputation(relation, reputationChange, 'attack', `NPC ${npc.name} attacked player ${defender.name}`)
+  }
+
   return { battleResult, moon, debrisField }
 }
 

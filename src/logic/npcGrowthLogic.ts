@@ -417,7 +417,7 @@ export const autoBuildNPCFleet = (npc: NPC): void => {
 /**
  * 为NPC生成资源(模拟资源生产)
  */
-export const generateNPCResources = (npc: NPC, deltaSeconds: number, config: DynamicDifficultyConfig): void => {
+export const generateNPCResources = (npc: NPC, deltaSeconds: number, config: DynamicDifficultyConfig, gameSpeed: number = 1): void => {
   const planet = npc.planets[0]
   if (!planet) return
 
@@ -433,11 +433,14 @@ export const generateNPCResources = (npc: NPC, deltaSeconds: number, config: Dyn
   const deuteriumProduction = 10 * deuteriumLevel * Math.pow(1.1, deuteriumLevel) * config.resourceGrowthRate
   const darkMatterProduction = ((25 * darkMatterLevel * Math.pow(1.5, darkMatterLevel)) / 3600) * config.resourceGrowthRate
 
+  // 应用游戏速度倍率到时间
+  const effectiveDeltaSeconds = deltaSeconds * gameSpeed
+
   // 增加资源
-  planet.resources.metal += metalProduction * deltaSeconds
-  planet.resources.crystal += crystalProduction * deltaSeconds
-  planet.resources.deuterium += deuteriumProduction * deltaSeconds
-  planet.resources.darkMatter += darkMatterProduction * deltaSeconds
+  planet.resources.metal += metalProduction * effectiveDeltaSeconds
+  planet.resources.crystal += crystalProduction * effectiveDeltaSeconds
+  planet.resources.deuterium += deuteriumProduction * effectiveDeltaSeconds
+  planet.resources.darkMatter += darkMatterProduction * effectiveDeltaSeconds
 
   // 确保不超过存储上限
   const metalStorage = planet.buildings[BuildingType.MetalStorage] || 0
@@ -455,12 +458,12 @@ export const generateNPCResources = (npc: NPC, deltaSeconds: number, config: Dyn
  * 主NPC成长更新函数
  * 应该在游戏循环中定期调用
  */
-export const updateNPCGrowth = (npc: NPC, gameState: NPCGrowthGameState, deltaSeconds: number): void => {
+export const updateNPCGrowth = (npc: NPC, gameState: NPCGrowthGameState, deltaSeconds: number, gameSpeed: number = 1): void => {
   // 使用动态难度（基于玩家积分）而不是固定难度
   const config = calculateDynamicDifficulty(gameState.player.points)
 
-  // 1. 持续生成资源
-  generateNPCResources(npc, deltaSeconds, config)
+  // 1. 持续生成资源（应用游戏速度倍率）
+  generateNPCResources(npc, deltaSeconds, config, gameSpeed)
 
   // 2. 定期评估并调整实力(使用静态计数器或时间戳)
   const now = Date.now()
