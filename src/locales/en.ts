@@ -886,6 +886,7 @@ export default {
     export: 'Export',
     exporting: 'Exporting...',
     exportSuccess: 'Export successful',
+    exportSuccessWithPath: 'Export successful, file saved to: {path}',
     exportFailed: 'Export failed, please try again',
     importData: 'Import Data',
     importDataDesc: 'Restore game progress from JSON file',

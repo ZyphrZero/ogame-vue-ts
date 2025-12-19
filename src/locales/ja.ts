@@ -844,6 +844,7 @@ export default {
     export: 'エクスポート',
     exporting: 'エクスポート中...',
     exportSuccess: 'エクスポート成功',
+    exportSuccessWithPath: 'エクスポート成功、ファイルの保存先：{path}',
     exportFailed: 'エクスポートに失敗しました。もう一度お試しください',
     importData: 'データインポート',
     importDataDesc: 'JSONファイルからゲームの進行状況を復元',

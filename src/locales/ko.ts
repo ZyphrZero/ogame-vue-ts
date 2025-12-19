@@ -845,6 +845,7 @@ export default {
     export: '내보내기',
     exporting: '내보내는 중...',
     exportSuccess: '내보내기 성공',
+    exportSuccessWithPath: '내보내기 성공, 파일 저장 위치: {path}',
     exportFailed: '내보내기 실패, 다시 시도해주세요',
     importData: '데이터 가져오기',
     importDataDesc: 'JSON 파일에서 게임 진행 상황 복원',

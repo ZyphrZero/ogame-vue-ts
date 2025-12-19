@@ -850,6 +850,7 @@ export default {
     export: 'Exportieren',
     exporting: 'Exportieren...',
     exportSuccess: 'Export erfolgreich',
+    exportSuccessWithPath: 'Export erfolgreich, Datei gespeichert unter: {path}',
     exportFailed: 'Export fehlgeschlagen, bitte erneut versuchen',
     importData: 'Daten importieren',
     importDataDesc: 'Spielfortschritt aus JSON-Datei wiederherstellen',

@@ -846,6 +846,7 @@ export default {
     export: '匯出',
     exporting: '匯出中...',
     exportSuccess: '匯出成功',
+    exportSuccessWithPath: '匯出成功，檔案已儲存到：{path}',
     exportFailed: '匯出失敗，請重試',
     importData: '匯入資料',
     importDataDesc: '從JSON檔案恢復遊戲進度',

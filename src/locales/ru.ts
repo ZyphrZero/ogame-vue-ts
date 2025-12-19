@@ -851,6 +851,7 @@ export default {
     export: 'Экспорт',
     exporting: 'Экспорт...',
     exportSuccess: 'Экспорт успешен',
+    exportSuccessWithPath: 'Экспорт успешен, файл сохранен в: {path}',
     exportFailed: 'Экспорт не удался, попробуйте еще раз',
     importData: 'Импорт данных',
     importDataDesc: 'Восстановить прогресс игры из JSON файла',

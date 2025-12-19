@@ -873,6 +873,7 @@ export default {
     export: '导出',
     exporting: '导出中...',
     exportSuccess: '导出成功',
+    exportSuccessWithPath: '导出成功，文件已保存到：{path}',
     exportFailed: '导出失败，请重试',
     importData: '导入数据',
     importDataDesc: '从JSON文件恢复游戏进度',
