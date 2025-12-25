@@ -155,6 +155,10 @@ export default {
     buildTime: 'Tiempo de Construcción',
     production: 'Producción',
     consumption: 'Consumo',
+    levelRange: 'Rango de Nivel',
+    totalCost: 'Costo Total',
+    totalPoints: 'Puntos Totales',
+    researchSpeedBonus: 'Bono de Velocidad de Investigación',
 
     storageCapacity: 'Capacidad',
     energyProduction: 'Producción de Energía',
@@ -411,10 +415,20 @@ export default {
       'Por favor verifica si tienes suficientes recursos, si se cumplen los prerrequisitos, o si hay otras tareas de investigación.'
   },
   shipyard: {
+    attack: 'Ataque',
+    shield: 'Escudo',
+    armor: 'Blindaje',
     missileAttack: 'Ataque de Misil',
     speed: 'Velocidad',
     cargoCapacity: 'Capacidad de Carga',
-    fuelConsumption: 'Consumo de Combustible'
+    fuelConsumption: 'Consumo de Combustible',
+    buildCost: 'Costo de Construcción',
+    buildTime: 'Tiempo de Construcción',
+    perUnit: 'Por Unidad',
+    batchCalculator: 'Calculadora de Lotes',
+    quantity: 'Cantidad',
+    totalCost: 'Costo Total',
+    totalTime: 'Tiempo Total'
   },
   shipyardView: {
     title: 'Astillero',

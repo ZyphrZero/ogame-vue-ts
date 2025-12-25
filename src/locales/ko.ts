@@ -409,9 +409,19 @@ export default {
     researchFailedMessage: '자원이 충분한지, 전제 조건이 충족되었는지, 또는 다른 연구 작업이 있는지 확인하세요.'
   },
   shipyard: {
+    attack: '공격력',
+    shield: '실드',
+    armor: '장갑',
     speed: '속도',
     cargoCapacity: '화물 용량',
-    fuelConsumption: '연료 소비'
+    fuelConsumption: '연료 소비',
+    buildCost: '건조 비용',
+    buildTime: '건조 시간',
+    perUnit: '단위당',
+    batchCalculator: '일괄 계산기',
+    quantity: '수량',
+    totalCost: '총 비용',
+    totalTime: '총 시간'
   },
   shipyardView: {
     title: '조선소',

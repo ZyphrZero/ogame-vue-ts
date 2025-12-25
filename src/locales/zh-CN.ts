@@ -264,6 +264,9 @@ export default {
   },
   research: {
     researchTime: '研究时间',
+    levelRange: '等级范围',
+    totalCost: '总成本',
+    totalPoints: '总积分',
 
     attackBonus: '攻击加成',
     shieldBonus: '护盾加成',
@@ -405,9 +408,19 @@ export default {
     researchFailedMessage: '请检查资源是否足够、前置条件是否满足，或是否有其他研究任务。'
   },
   shipyard: {
+    attack: '攻击力',
+    shield: '护盾',
+    armor: '装甲',
     speed: '速度',
     cargoCapacity: '载货量',
-    fuelConsumption: '燃料消耗'
+    fuelConsumption: '燃料消耗',
+    buildCost: '建造成本',
+    buildTime: '建造时间',
+    perUnit: '单位',
+    batchCalculator: '批量计算器',
+    quantity: '数量',
+    totalCost: '总成本',
+    totalTime: '总时间'
   },
   shipyardView: {
     title: '船坞',

@@ -157,6 +157,10 @@ export default {
     build: 'Bauen',
     production: 'Produktion',
     consumption: 'Verbrauch',
+    levelRange: 'Stufenbereich',
+    totalCost: 'Gesamtkosten',
+    totalPoints: 'Gesamtpunkte',
+    researchSpeedBonus: 'Forschungsgeschwindigkeitsbonus',
     capacity: 'Capacity/Effect',
     storageCapacity: 'Capacity',
     energyProduction: 'Energy Production',
@@ -265,6 +269,9 @@ export default {
   },
   research: {
     researchTime: 'Forschungszeit',
+    levelRange: 'Stufenbereich',
+    totalCost: 'Gesamtkosten',
+    totalPoints: 'Gesamtpunkte',
     capacity: 'Capacity/Effect',
     storageCapacity: 'Capacity',
     energyProduction: 'Energy Production',
@@ -417,10 +424,20 @@ export default {
       'Bitte überprüfen Sie, ob Sie genügend Ressourcen haben, die Voraussetzungen erfüllt sind oder keine anderen Forschungsaufträge vorhanden sind.'
   },
   shipyard: {
+    attack: 'Angriff',
+    shield: 'Schild',
+    armor: 'Panzerung',
     missileAttack: 'Raketenangriff',
     speed: 'Geschwindigkeit',
     cargoCapacity: 'Ladekapazität',
-    fuelConsumption: 'Treibstoffverbrauch'
+    fuelConsumption: 'Treibstoffverbrauch',
+    buildCost: 'Baukosten',
+    buildTime: 'Bauzeit',
+    perUnit: 'Pro Einheit',
+    batchCalculator: 'Stapelrechner',
+    quantity: 'Menge',
+    totalCost: 'Gesamtkosten',
+    totalTime: 'Gesamtzeit'
   },
   shipyardView: {
     title: 'Raumschiffwerft',

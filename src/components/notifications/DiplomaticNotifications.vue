@@ -19,7 +19,7 @@
           {{ t('diplomacy.markAllRead') }}
         </Button>
       </div>
-      <ScrollArea class="h-auto max-h-96">
+      <ScrollArea class="h-auto max-h-96 overflow-y-auto">
         <Empty v-if="allNotifications.length === 0" class="border-0">
           <EmptyContent>
             <ScrollText class="h-10 w-10 text-muted-foreground" />

@@ -161,6 +161,7 @@ export default {
     totalCost: 'Общая стоимость',
     totalPoints: 'Общие очки',
     levelRange: 'Диапазон уровней',
+    researchSpeedBonus: 'Бонус скорости исследований',
     capacity: 'Capacity/Effect',
     storageCapacity: 'Capacity',
     energyProduction: 'Energy Production',
@@ -269,6 +270,9 @@ export default {
   },
   research: {
     researchTime: 'Время исследования',
+    levelRange: 'Диапазон уровней',
+    totalCost: 'Общая стоимость',
+    totalPoints: 'Всего очков',
     capacity: 'Capacity/Effect',
     storageCapacity: 'Capacity',
     energyProduction: 'Energy Production',
@@ -424,9 +428,19 @@ export default {
       'Пожалуйста, проверьте, достаточно ли у вас ресурсов, выполнены ли предварительные условия или нет других исследовательских задач.'
   },
   shipyard: {
+    attack: 'Атака',
+    shield: 'Щит',
+    armor: 'Броня',
     speed: 'Скорость',
     cargoCapacity: 'Грузоподъёмность',
-    fuelConsumption: 'Расход топлива'
+    fuelConsumption: 'Расход топлива',
+    buildCost: 'Стоимость постройки',
+    buildTime: 'Время постройки',
+    perUnit: 'За единицу',
+    batchCalculator: 'Калькулятор партии',
+    quantity: 'Количество',
+    totalCost: 'Общая стоимость',
+    totalTime: 'Общее время'
   },
   shipyardView: {
     title: 'Верфь',

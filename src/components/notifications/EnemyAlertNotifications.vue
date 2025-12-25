@@ -19,7 +19,7 @@
           {{ t('enemyAlert.markAllRead') }}
         </Button>
       </div>
-      <ScrollArea class="h-auto max-h-96">
+      <ScrollArea class="h-auto max-h-96 overflow-y-auto">
         <Empty v-if="activeAlerts.length === 0" class="border-0">
           <EmptyContent>
             <Shield class="h-10 w-10 text-muted-foreground" />

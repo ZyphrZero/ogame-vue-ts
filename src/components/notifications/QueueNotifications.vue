@@ -32,7 +32,7 @@
           </TabsTrigger>
         </TabsList>
 
-        <ScrollArea class="h-auto max-h-96">
+        <ScrollArea class="h-auto max-h-96 overflow-y-auto">
           <TabsContent v-for="tab in tabConfig" :key="tab.value" :value="tab.value" class="mt-0">
             <Empty v-if="tab.items.length === 0" class="border-0">
               <EmptyContent>
@@ -63,7 +63,9 @@
                         class="text-[10px] sm:text-xs whitespace-nowrap"
                         :class="isWaitingItemResourcesReady(item as WaitingQueueItem) ? 'text-green-500' : 'text-yellow-500'"
                       >
-                        {{ isWaitingItemResourcesReady(item as WaitingQueueItem) ? t('queue.resourcesReady') : t('queue.waitingResources') }}
+                        {{
+                          isWaitingItemResourcesReady(item as WaitingQueueItem) ? t('queue.resourcesReady') : t('queue.waitingResources')
+                        }}
                       </span>
                       <Button
                         variant="ghost"
@@ -146,8 +148,8 @@
   import { useI18n } from '@/composables/useI18n'
   import { formatTime, formatNumber } from '@/utils/format'
   import type { BuildQueueItem, WaitingQueueItem, BuildingType, ShipType, DefenseType, TechnologyType, Resources } from '@/types/game'
-import * as waitingQueueLogic from '@/logic/waitingQueueLogic'
-import * as resourceLogic from '@/logic/resourceLogic'
+  import * as waitingQueueLogic from '@/logic/waitingQueueLogic'
+  import * as resourceLogic from '@/logic/resourceLogic'
 
   const { t } = useI18n()
   const gameStore = useGameStore()

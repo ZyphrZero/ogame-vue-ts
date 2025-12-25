@@ -155,6 +155,10 @@ export default {
     buildTime: 'Build Time',
     production: 'Production',
     consumption: 'Consumption',
+    levelRange: 'Level Range',
+    totalCost: 'Total Cost',
+    totalPoints: 'Total Points',
+    researchSpeedBonus: 'Research Speed Bonus',
 
     storageCapacity: 'Capacity',
     energyProduction: 'Energy Production',
@@ -260,6 +264,9 @@ export default {
   },
   research: {
     researchTime: 'Research Time',
+    levelRange: 'Level Range',
+    totalCost: 'Total Cost',
+    totalPoints: 'Total Points',
 
     attackBonus: 'Attack Bonus',
     shieldBonus: 'Shield Bonus',
@@ -403,10 +410,20 @@ export default {
     researchFailedMessage: 'Please check if you have enough resources, prerequisites are met, or if there are other research tasks.'
   },
   shipyard: {
+    attack: 'Attack',
+    shield: 'Shield',
+    armor: 'Armor',
     missileAttack: 'Missile Attack',
     speed: 'Speed',
     cargoCapacity: 'Cargo Capacity',
-    fuelConsumption: 'Fuel Consumption'
+    fuelConsumption: 'Fuel Consumption',
+    buildCost: 'Build Cost',
+    buildTime: 'Build Time',
+    perUnit: 'Per Unit',
+    batchCalculator: 'Batch Calculator',
+    quantity: 'Quantity',
+    totalCost: 'Total Cost',
+    totalTime: 'Total Time'
   },
   shipyardView: {
     title: 'Shipyard',
@@ -426,7 +443,17 @@ export default {
     buildFailedMessage: 'Please check if you have enough resources or if prerequisites are met.'
   },
   defense: {
-    missileAttack: 'Missile Attack'
+    attack: 'Attack',
+    shield: 'Shield',
+    armor: 'Armor',
+    missileAttack: 'Missile Attack',
+    buildCost: 'Build Cost',
+    buildTime: 'Build Time',
+    perUnit: 'Per Unit',
+    batchCalculator: 'Batch Calculator',
+    quantity: 'Quantity',
+    totalCost: 'Total Cost',
+    totalTime: 'Total Time'
   },
   defenseView: {
     title: 'Defense',

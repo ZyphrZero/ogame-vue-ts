@@ -270,6 +270,9 @@ export default {
   },
   research: {
     researchTime: '研究時間',
+    levelRange: '等級範圍',
+    totalCost: '總成本',
+    totalPoints: '總積分',
     capacity: '容量/效果',
     attackBonus: '攻擊加成',
     shieldBonus: '護盾加成',
@@ -414,11 +417,20 @@ export default {
     researchFailedMessage: '請檢查資源是否足夠、前置條件是否滿足，或是否有其他研究任務。'
   },
   shipyard: {
-    missileAttack: '導彈攻擊',
+    attack: '攻擊力',
+    shield: '護盾',
     armor: '裝甲',
+    missileAttack: '導彈攻擊',
     speed: '速度',
     cargoCapacity: '載貨量',
     fuelConsumption: '燃料消耗',
+    buildCost: '建造成本',
+    buildTime: '建造時間',
+    perUnit: '單位',
+    batchCalculator: '批量計算器',
+    quantity: '數量',
+    totalCost: '總成本',
+    totalTime: '總時間',
     build: '建造'
   },
   shipyardView: {
