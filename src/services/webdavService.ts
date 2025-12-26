@@ -1,14 +1,13 @@
 /**
  * WebDAV 同步服务
  * 支持将存档上传到 WebDAV 服务器（如坚果云、Nextcloud、NAS等）
+ * 注意：WebDAV 配置存储在 gameStore.webdavConfig 中，与用户数据一起持久化
  */
 
-export interface WebDAVConfig {
-  serverUrl: string // WebDAV 服务器地址
-  username: string // 用户名
-  password: string // 密码或应用专用密码
-  basePath: string // 存档存放路径
-}
+import type { WebDAVConfig } from '@/types/game'
+
+// 重新导出类型以保持向后兼容
+export type { WebDAVConfig }
 
 export interface WebDAVFile {
   name: string
@@ -59,31 +58,6 @@ export interface WebDAVResult {
   fileName?: string
   data?: string
   files?: WebDAVFile[]
-}
-
-const STORAGE_KEY = 'ogame-webdav-config'
-
-// 获取保存的 WebDAV 配置
-export const getWebDAVConfig = (): WebDAVConfig | null => {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY)
-    if (saved) {
-      return JSON.parse(saved)
-    }
-  } catch (e) {
-    console.error('Failed to load WebDAV config:', e)
-  }
-  return null
-}
-
-// 保存 WebDAV 配置
-export const saveWebDAVConfig = (config: WebDAVConfig): void => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(config))
-}
-
-// 清除 WebDAV 配置
-export const clearWebDAVConfig = (): void => {
-  localStorage.removeItem(STORAGE_KEY)
 }
 
 // 构建 Authorization header

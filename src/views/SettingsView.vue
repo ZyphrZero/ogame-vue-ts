@@ -334,7 +334,7 @@
     <PrivacyDialog v-model:open="showPrivacyDialog" />
 
     <!-- WebDAV 配置对话框 -->
-    <WebDAVConfigDialog v-model:open="showWebDAVConfig" @saved="onWebDAVConfigSaved" />
+    <WebDAVConfigDialog v-model:open="showWebDAVConfig" />
 
     <!-- WebDAV 文件列表对话框 -->
     <WebDAVFileListDialog v-model:open="showWebDAVFiles" :config="webdavConfig" @select="handleWebDAVDownload" />
@@ -389,12 +389,7 @@
   import WebDAVConfigDialog from '@/components/settings/WebDAVConfigDialog.vue'
   import WebDAVFileListDialog from '@/components/settings/WebDAVFileListDialog.vue'
   import { useHints } from '@/composables/useHints'
-  import {
-    type WebDAVConfig,
-    getWebDAVConfig,
-    uploadToWebDAV,
-    downloadFromWebDAV
-  } from '@/services/webdavService'
+  import { uploadToWebDAV, downloadFromWebDAV } from '@/services/webdavService'
 
   const { t } = useI18n()
   const { hintsEnabled, setHintsEnabled, resetHints } = useHints()
@@ -415,7 +410,7 @@
   // WebDAV 相关状态
   const showWebDAVConfig = ref(false)
   const showWebDAVFiles = ref(false)
-  const webdavConfig = ref<WebDAVConfig | null>(getWebDAVConfig())
+  const webdavConfig = computed(() => gameStore.webdavConfig)
   const isWebDAVUploading = ref(false)
 
   // 确保通知设置存在
@@ -756,11 +751,6 @@
   // 更新背景设置
   const updateBackgroundSetting = (val: boolean) => {
     gameStore.player.backgroundEnabled = val
-  }
-
-  // WebDAV 配置保存回调
-  const onWebDAVConfigSaved = () => {
-    webdavConfig.value = getWebDAVConfig()
   }
 
   // WebDAV 上传
