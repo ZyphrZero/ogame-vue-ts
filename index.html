@@ -13,38 +13,9 @@
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
-    <!-- 统计勿删 - 异步加载避免阻塞页面 -->
+    <!-- 统计勿删 -->
     <script>
-      // 异步加载外部脚本，不阻塞页面渲染
-      (function() {
-        // 51.la 统计
-        var la = document.createElement('script');
-        la.charset = 'UTF-8';
-        la.id = 'LA_COLLECT';
-        la.src = 'https://sdk.51.la/js-sdk-pro.min.js';
-        la.async = true;
-        la.onload = function() {
-          if (typeof LA !== 'undefined') {
-            LA.init({ id: "L298GYqn6JhAO0VU", ck: "L298GYqn6JhAO0VU", autoTrack: true, hashMode: true });
-          }
-        };
-        la.onerror = function() { console.warn('51.la analytics failed to load'); };
-        document.body.appendChild(la);
-
-        // vConsole - 仅在开发环境或调试时加载
-        if (location.hostname === 'localhost' || location.search.includes('debug=1')) {
-          var vc = document.createElement('script');
-          vc.src = 'https://cdn.bootcdn.net/ajax/libs/vConsole/3.15.1/vconsole.min.js';
-          vc.async = true;
-          vc.onload = function() {
-            if (typeof VConsole !== 'undefined') {
-              window.vConsole = new VConsole();
-            }
-          };
-          vc.onerror = function() { console.warn('vConsole failed to load'); };
-          document.body.appendChild(vc);
-        }
-      })();
+      !function (p) { "use strict"; !function (t) { var s = window, e = document, i = p, c = "".concat("https:" === e.location.protocol ? "https://" : "http://", "sdk.51.la/js-sdk-pro.min.js"), n = e.createElement("script"), r = e.getElementsByTagName("script")[0]; n.type = "text/javascript", n.setAttribute("charset", "UTF-8"), n.async = !0, n.src = c, n.id = "LA_COLLECT", i.d = n; var o = function () { s.LA.ids.push(i) }; s.LA ? s.LA.ids && o() : (s.LA = p, s.LA.ids = [], o()), r.parentNode.insertBefore(n, r) }() }({ id: "L298GYqn6JhAO0VU", ck: "L298GYqn6JhAO0VU", autoTrack: true, hashMode: true });
     </script>
   </body>
 

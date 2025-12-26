@@ -3,15 +3,25 @@ package games.wenzi.ogame;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Window;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import androidx.core.splashscreen.SplashScreen;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import com.getcapacitor.BridgeActivity;
 
 public class MainActivity extends BridgeActivity {
+    private boolean isWebViewReady = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // 安装 SplashScreen，必须在 super.onCreate 之前调用
+        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+
+        // 保持 SplashScreen 直到 WebView 加载完成
+        splashScreen.setKeepOnScreenCondition(() -> !isWebViewReady);
+
         super.onCreate(savedInstanceState);
 
         Window window = getWindow();
@@ -45,6 +55,18 @@ public class MainActivity extends BridgeActivity {
             settings.setDatabaseEnabled(true);
             // 启用硬件加速渲染
             webView.setLayerType(android.view.View.LAYER_TYPE_HARDWARE, null);
+
+            // 监听页面加载进度，加载完成后隐藏 SplashScreen
+            webView.setWebChromeClient(new WebChromeClient() {
+                @Override
+                public void onProgressChanged(WebView view, int newProgress) {
+                    super.onProgressChanged(view, newProgress);
+                    // 当页面加载达到 80% 时认为可以显示
+                    if (newProgress >= 80) {
+                        isWebViewReady = true;
+                    }
+                }
+            });
         }
     }
 }
